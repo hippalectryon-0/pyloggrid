@@ -1,6 +1,6 @@
 # PyLogGrid
 
-This repository contains the code and docs for the [pyloggrid](https://yppi.org/project/pyloggrid) package.
+This repository contains the code and docs for the [pyloggrid](https://pypi.org/project/pyloggrid) package.
 
 The main package is currently hosted on a private Gitlab for pratical reasons.
 
