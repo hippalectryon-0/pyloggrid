@@ -1,0 +1,12 @@
+[run]
+omit =
+    pyloggrid/LogGrid/setup_linux.py
+    pyloggrid/LogGrid/setup_windows.py
+    pyloggrid/Libs/plotLib.py
+
+[report]
+exclude_also =
+    raise AssertionError
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    if TYPE_CHECKING:

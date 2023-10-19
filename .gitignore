@@ -4,3 +4,15 @@ log-grid/*
 # Unignore specific folders for GitHub
 !log-grid/pyloggrid/
 !log-grid/docs/
+!log-grid/.coveragerc
+!log-grid/.gitignore
+!log-grid/.gitlab-ci.yml
+!log-grid/.pre-commit-config.yaml
+!log-grid/CHANGELOG.md
+!log-grid/CONTRIBUTING.md
+!log-grid/install.ps1
+!log-grid/install.sh
+!log-grid/LICENSE
+!log-grid/poetry.lock
+!log-grid/pyproject.toml
+!log-grid/README.md

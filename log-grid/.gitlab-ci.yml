@@ -1,0 +1,145 @@
+image: "tempuser8755/python3.11-clang15-omp:latest"  # custom image with python and clang15+openmp installed
+# Dockerfile:
+## FROM ubuntu:latest
+## RUN ln -fs /use/share/zoneinfo/UTC /etc/localtime
+## RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y software-properties-common && add-apt-repository -y ppa:deadsnakes/ppa
+## RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
+## RUN apt-get update && apt-get install -y python3.11 python3.11-dev python3.11-venv python3-pip build-essential git cmake nodejs
+## RUN npm install --global yarn
+## RUN python3.11 -m pip install virtualenv
+## RUN git clone --depth=1 https://github.com/llvm/llvm-project.git
+## WORKDIR llvm-project
+## RUN mkdir build
+## WORKDIR build
+## RUN cmake -DLLVM_ENABLE_PROJECTS="clang;openmp" -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" ../llvm
+## RUN make -j16
+## RUN cp ./projects/openmp/runtime/src/omp.h lib/clang/17/include
+## RUN cp ./lib/libomp.so /usr/lib
+## RUN update-alternatives --install /usr/bin/clang-17 clang-17 /llvm-project/build/bin/clang 100
+## RUN update-alternatives --install /usr/bin/clang clang /llvm-project/build/bin/clang 100
+#
+# docker build -t tempuser8755/python3.11-clang15-omp .
+# (if necessary: docker login)
+# docker push tempuser8755/python3.11-clang15-omp
+
+# cache venv for faster jobs
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+cache:
+  paths:
+    - .cache/pip
+    - .venv/
+    - pyloggrid/LogGrid/*.so
+
+# different stages in the pipeline
+stages:
+  - cleanup
+  - build
+  - lint
+  - test
+  - benchmark
+  - deploy
+
+cleanup:
+  stage: cleanup
+  needs: [ ]
+  script:
+    - rm -rf .venv
+    - rm -f pyloggrid/LogGrid/*.so
+
+venv:
+  stage: build
+  needs: [ "cleanup" ]
+  script:
+    - echo "Building venv for cache"
+    - python3.11 -m pip install poetry
+    - python3.11 -m poetry config virtualenvs.in-project true
+    - python3.11 -m poetry install --with=docs,examples
+  interruptible: true
+
+compile:
+  stage: build
+  needs: [ "venv" ]
+  interruptible: true
+  script:
+    - source .venv/bin/activate
+    - cd pyloggrid/LogGrid
+    - make
+
+pre-commit:
+  stage: lint
+  needs: [ "venv" ]
+  interruptible: true
+  script:
+    - source .venv/bin/activate
+    - pre-commit run --all-files --show-diff-on-failure
+
+flake8:
+  stage: lint
+  needs: [ "venv" ]
+  allow_failure: true
+  interruptible: true
+  script:
+    - source .venv/bin/activate
+    - flake8 . --count --ignore=E203,E266,E402,E501,E731,E741,W503 --show-source --statistics --exclude=.venv,Archive,Examples/Draft
+
+unittest:
+  stage: test
+  needs: [ "compile" ]
+  interruptible: true
+  script:
+    - source .venv/bin/activate
+    - pytest -v --junitxml=report.xml --cov=. --cov-report xml:coverage.xml --cov-report term
+  artifacts: # reports for gitlab pipelines
+    when: always
+    reports:
+      junit: report.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+  coverage: /(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/
+
+benchmark:
+  stage: benchmark
+  needs: [ "compile" ]
+  interruptible: true
+  script:
+    - source .venv/bin/activate
+    - cd Utils
+    - python benchmarking_parallel.py
+    - - python benchmarking_anyparam.py
+  artifacts:
+    paths:
+      - Utils/*.png
+
+pages-test:
+  stage: deploy
+  needs: [ "benchmark" ]
+  dependencies:
+    - benchmark
+  script:
+    - source .venv/bin/activate
+    - mv Utils/*.png docs/static/img/benchmark
+    - sphinx-build -b html docs docs/_build
+  artifacts:
+    paths:
+      - public
+  except:
+    - master
+
+
+pages:
+  stage: deploy
+  needs: [ "benchmark" ]
+  dependencies:
+    - benchmark
+  script:
+    - source .venv/bin/activate
+    - mv Utils/*.png docs/static/img/benchmark
+    - sphinx-build -b html docs docs/_build
+    - mv docs/_build public
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
