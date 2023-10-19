@@ -1,0 +1,72 @@
+# Pycharm
+.idea/
+
+# common formats
+*.npy
+*.npz
+*.json
+*.obj
+*.lib
+*.exp
+*.log
+*.png
+*.mp4
+*.nc
+*.hdf5
+*.h5
+
+# Basilisk
+*.deps
+*.tests
+*.s.d
+stream_wrap.c
+*/2D_basilisk/stream.py
+
+# Compilation
+*.o
+*.so
+*.dll
+*.pyd
+*.mex
+ns3d
+fftw-3.3.10/
+/out/
+dist/
+build/
+/pyloggrid.egg-info/
+
+# python
+python3.*/
+__pycache__/
+**/*.pytest_cache/
+**/.ipynb_checkpoints/
+/.venv/
+
+# Cython
+/LogGrid/build/
+/LogGrid/*.c
+/LogGrid/*.cpp
+/LogGrid/*.html
+
+# Profiling
+/Utils/callgrind.log
+/Utils/script.calltree
+/Utils/script.profile
+/Utils/benchmark_c/convolver_c.c
+/Utils/benchmark_c/makefile
+
+# Simulation output
+/Simulations/results/
+/Simulations/plots/
+
+# Pytest
+*/test/
+
+# Temp not to be uploaded for now
+Ignore/
+
+# Auto-generated Docs
+docs/_build/
+docs/docs/
+docs/node_modules/
+docs/autoapi/

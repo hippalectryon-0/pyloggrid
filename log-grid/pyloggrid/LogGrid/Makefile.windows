@@ -1,0 +1,24 @@
+CC=gcc
+CFLAGS=-c -g -fpic -Wall -Wextra -O2 -march=native -ffast-math -funroll-loops -fno-stack-protector -Wl,-z,now
+LDFLAGS=-shared -Wl,-O1 -Wl,-Bsymbolic-functions -g -fwrapv -O2
+SOURCES=convolver_c.c
+OBJECTS=$(SOURCES:.c=.o)
+TARGET=convolver_c.dll
+
+.PHONY: all clean
+
+all: $(TARGET)
+
+$(TARGET): $(OBJECTS)
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+	python setup_windows.py build_ext --inplace
+	del $(OBJECTS) compute_convolution_kernel.html compute_convolution_kernel.c convolver_c.o
+	rmdir /s /q build
+
+.c.o:
+	$(CC) $(CFLAGS) $< -o $@
+
+clean:
+	del $(OBJECTS) $(TARGET)
+	del compute_convolution_kernel.html compute_convolution_kernel.c *.dll *.pyd *.o
+	rmdir /s /q build
