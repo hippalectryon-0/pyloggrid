@@ -1,7 +1,9 @@
 .idea/
+
+# By default we exclude everything
 log-grid/*
 
-# Unignore specific folders for GitHub
+# Unexclude specific folders for GitHub
 !log-grid/pyloggrid/
 !log-grid/docs/
 !log-grid/.coveragerc
@@ -16,3 +18,7 @@ log-grid/*
 !log-grid/poetry.lock
 !log-grid/pyproject.toml
 !log-grid/README.md
+!log-grid/Utils/
+!log-grid/tests/
+!log-grid/Simulations/
+!log-grid/.gitlab
