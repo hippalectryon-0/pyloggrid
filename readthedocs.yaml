@@ -6,6 +6,7 @@ build:
       python: "3.11"
     jobs:
       post_install:
+        - cd log-grid
         - pip install poetry
         - poetry config virtualenvs.create false
         - poetry install
