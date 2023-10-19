@@ -22,3 +22,5 @@ log-grid/*
 !log-grid/tests/
 !log-grid/Simulations/
 !log-grid/.gitlab
+!log-grid/readme_pypi.md
+!log-grid/build.py
