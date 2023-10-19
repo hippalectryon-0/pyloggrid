@@ -1,4 +1,3 @@
-import os
 import tomllib
 from datetime import datetime
 
@@ -73,15 +72,9 @@ def setup(sphinx):
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
-html_static_path = ["_static"]
+# html_static_path = ["static"]
 
-on_rtd = os.environ.get("READTHEDOCS", None) == "True"
-
-if not on_rtd:  # only import and set the theme if we're building docs locally
-    import sphinx_rtd_theme
-
-    html_theme = "sphinx_rtd_theme"
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+html_theme = "sphinx_rtd_theme"
 html_favicon = "static/img/PyLogGrid.svg"
 
 # -- Extension configuration -------------------------------------------------

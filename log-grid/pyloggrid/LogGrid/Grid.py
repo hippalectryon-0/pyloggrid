@@ -23,7 +23,7 @@ import scipy.optimize
 # noinspection PyProtectedMember
 from numpy._typing import ArrayLike
 
-import pyloggrid.LogGrid.convolver as convolver_cython
+import pyloggrid.LogGrid.compute_convolution_kernel as conv_kernel_generator
 from pyloggrid.Libs.custom_logger import setup_custom_logger
 from pyloggrid.Libs.misc import TimeTracker, bytes2human
 
@@ -301,12 +301,12 @@ class Grid:
 
             if self.grid.D == 1:
                 # noinspection PyTypeChecker
-                kernel = convolver_cython.compute_interaction_kernel_1D(
+                kernel = conv_kernel_generator.compute_interaction_kernel_1D(
                     kernel_offsets, kernel_signs, kernel_offsets_k0_ax0, kernel_signs_k0_ax0, self.grid.k0, self.grid.ks[0].shape[0]
                 )
             elif self.grid.D == 2:
                 # noinspection PyTypeChecker
-                kernel = convolver_cython.compute_interaction_kernel_2D(
+                kernel = conv_kernel_generator.compute_interaction_kernel_2D(
                     kernel_offsets,
                     kernel_signs,
                     kernel_offsets_k0_ax0,
@@ -319,7 +319,7 @@ class Grid:
                 )
             elif self.grid.D == 3:
                 # noinspection PyTypeChecker
-                kernel = convolver_cython.compute_interaction_kernel_3D(
+                kernel = conv_kernel_generator.compute_interaction_kernel_3D(
                     kernel_offsets,
                     kernel_signs,
                     kernel_offsets_k0_ax0,

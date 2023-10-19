@@ -7,8 +7,8 @@ from setuptools import Extension
 
 ext_modules = [
     Extension(
-        "convolver",
-        ["convolver.pyx"],
+        "compute_convolution_kernel",
+        ["compute_convolution_kernel.pyx"],
         extra_compile_args=["/openmp"],
     )
 ]

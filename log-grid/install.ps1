@@ -74,9 +74,12 @@ if (-Not(Test-Path -Path "python$python_v") -and $args[0] -ne "-s")
 "Installing python packages"
 Invoke-Expression "& $python_cmd -m pip install --upgrade poetry --no-warn-script-location"
 Invoke-Expression "& $python_cmd -m poetry config virtualenvs.in-project true"
-Invoke-Expression "& $python_cmd -m poetry install --with=docs,examples"
 Invoke-Expression "& $python_cmd -m virtualenv $venv"
+$activate_script = Join-Path $venv "Scripts\Activate.ps1"
+Invoke-Expression "& $activate_script"
+Invoke-Expression "& poetry install --with=docs,examples"
 Invoke-Expression "& pre-commit install"
+Remove-Item build -Recurse
 "Python packages installed"
 
 

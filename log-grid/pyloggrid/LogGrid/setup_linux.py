@@ -11,8 +11,8 @@ os.environ["CXX"] = "clang -shared"
 
 ext_modules = [
     Extension(
-        "convolver",
-        ["convolver.pyx"],
+        "compute_convolution_kernel",
+        ["compute_convolution_kernel.pyx"],
         extra_compile_args=["-fopenmp", "-march=native", "-c", "-g", "-Wextra", "-march=native", "-ffast-math", "-funroll-loops", "-fno-stack-protector"],
         extra_link_args=["-fopenmp"],
     )

@@ -13,12 +13,13 @@ all: $(TARGET)
 $(TARGET): $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
 	python setup_linux.py build_ext --inplace
-	rm -f $(OBJECTS) convolver.html convolver.c
+	rm -f $(OBJECTS) compute_convolution_kernel.html compute_convolution_kernel.c convolver_c.o
+	rm -rf convolver.cpython-*.so ../../convolver.cpython-*.so
 	rm -rf build
 
 .c.o:
 	$(CC) $(CFLAGS) $< -o $@
 
 clean:
-	rm -f $(OBJECTS) $(TARGET) convolver.html convolver.c convolver.*.so
+	rm -f $(OBJECTS) $(TARGET) compute_convolution_kernel.html compute_convolution_kernel.c *.so *.pyd *.o
 	rm -rf build

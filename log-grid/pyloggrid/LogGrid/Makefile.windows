@@ -12,7 +12,7 @@ all: $(TARGET)
 $(TARGET): $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
 	python setup_windows.py build_ext --inplace
-	del $(OBJECTS) convolver.html convolver.c
+	del $(OBJECTS) compute_convolution_kernel.html compute_convolution_kernel.c convolver_c.o
 	rmdir /s /q build
 
 .c.o:
@@ -20,5 +20,5 @@ $(TARGET): $(OBJECTS)
 
 clean:
 	del $(OBJECTS) $(TARGET)
-	del convolver.html convolver.c convolver.*.dll
+	del compute_convolution_kernel.html compute_convolution_kernel.c *.dll *.pyd *.o
 	rmdir /s /q build

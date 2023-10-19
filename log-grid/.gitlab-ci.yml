@@ -53,8 +53,9 @@ venv:
   script:
     - echo "Building venv for cache"
     - python3.11 -m pip install poetry
-    - python3.11 -m poetry config virtualenvs.in-project true
-    - python3.11 -m poetry install --with=docs,examples
+    - python3.11 -m virtualenv .venv
+    - . .venv/bin/activate
+    - poetry install --with=docs,examples
   interruptible: true
 
 compile:
@@ -127,7 +128,6 @@ pages-test:
   except:
     - master
 
-
 pages:
   stage: deploy
   needs: [ "benchmark" ]
@@ -143,3 +143,21 @@ pages:
       - public
   only:
     - master
+
+pypi:
+  stage: deploy  # publish to gitlab package repo & pypi
+  needs: [ "unittest" ]
+  allow_failure: true
+  script:
+    - python3.11 -m pip install poetry
+    - source .venv/bin/activate
+    - poetry config repositories.gitlab "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi"
+    - poetry config http-basic.gitlab gitlab-ci-token "$CI_JOB_TOKEN"
+    - poetry build
+    - poetry publish --repository gitlab
+    - poetry config repositories.test-pypi https://test.pypi.org/legacy/
+    - poetry config pypi-token.test-pypi $PYPI_TEST_API_TOKEN
+    - poetry publish --repository test-pypi
+  only:
+    - master
+    - pypi-package  # TODO remove
