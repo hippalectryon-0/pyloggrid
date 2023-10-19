@@ -31,6 +31,9 @@ stream_wrap.c
 ns3d
 fftw-3.3.10/
 /out/
+dist/
+build/
+/pyloggrid.egg-info/
 
 # python
 python3.*/
@@ -64,3 +67,6 @@ Ignore/
 
 # Auto-generated Docs
 docs/_build/
+docs/docs/
+docs/node_modules/
+docs/autoapi/
