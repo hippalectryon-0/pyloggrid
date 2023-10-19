@@ -1,0 +1,6 @@
+.idea/
+log-grid/*
+
+# Unignore specific folders for GitHub
+!log-grid/pyloggrid/
+!log-grid/docs/
