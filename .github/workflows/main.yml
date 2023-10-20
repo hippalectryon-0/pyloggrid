@@ -9,7 +9,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: setup
-        run: cp log-grid/.pre-commit-config.yaml .
+        run: |
+          cp log-grid/.pre-commit-config.yaml .
+          cp log-grid/.pyproject.toml .
       - uses: actions/setup-python@v3
       - uses: pre-commit/action@v3.0.0
 
