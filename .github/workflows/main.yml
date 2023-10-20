@@ -1,0 +1,52 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main  # You can change this to match your default branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ '3.11' ]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: 'x64'
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python -
+          poetry config virtualenvs.in-project true
+
+      - name: Install dependencies
+        run: |
+               poetry install
+          #          remove from site-packages, use local source instead (instead we get wrong coverage)
+               pip uninstall -y pyloggrid
+
+      - name: Compile
+        run: |
+          cd pyloggrid/LogGrid
+          make
+
+      - name: Run pre-commit
+        run: |
+          . .venv/bin/activate
+          pre-commit run --all-files --show-diff-on-failure
+
+      - name: Run Flake8
+        run: |
+          flake8 . --count --ignore=E203,E266,E402,E501,E731,E741,W503 --show-source --statistics --exclude=.venv,Archive,Examples/Draft
+
+      - name: Run Tests
+        run: |
+          python -m pytest -v --junitxml=report.xml --cov=. --cov-report xml:coverage.xml --cov-report term
