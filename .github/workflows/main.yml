@@ -22,10 +22,12 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: 'x64'
 
-      - name: Install Poetry
+      - name: Install Poetry & venv
         run: |
-          curl -sSL https://install.python-poetry.org | python -
-          poetry config virtualenvs.in-project true
+          python3.11 -m pip install poetry
+          python3.11 -m virtualenv .venv
+          . .venv/bin/activate
+          
 
       - name: Install dependencies
         run: |
