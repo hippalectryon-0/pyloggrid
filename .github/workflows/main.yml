@@ -45,6 +45,7 @@ jobs:
 
       - name: Run pre-commit
         run: |
+          . .venv/bin/activate
           cd log-grid
           pre-commit run --all-files --show-diff-on-failure
 
