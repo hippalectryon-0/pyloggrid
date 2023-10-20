@@ -48,11 +48,11 @@ jobs:
           . .venv/bin/activate
           cd log-grid
           black . --config pyproject.toml
-          pycln --config pyproject.toml
-          isort --settings-path pyproject.toml
-          pre-commit run --all-files --show-diff-on-failure
+          pycln . --config pyproject.toml
+          isort . --settings-path pyproject.toml
 
       - name: Run Flake8
+        if: success() || failure()
         run: |
           . .venv/bin/activate
           cd log-grid
