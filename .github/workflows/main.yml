@@ -31,12 +31,14 @@ jobs:
 
       - name: Install dependencies
         run: |
+          . .venv/bin/activate
           cd log-grid
           poetry install
           pip uninstall -y pyloggrid # remove from site-packages, use local source instead (instead we get wrong coverage)
 
       - name: Compile
         run: |
+          . .venv/bin/activate
           cd log-grid
           cd pyloggrid/LogGrid
           make
@@ -48,10 +50,12 @@ jobs:
 
       - name: Run Flake8
         run: |
+          . .venv/bin/activate
           cd log-grid
           flake8 . --count --ignore=E203,E266,E402,E501,E731,E741,W503 --show-source --statistics --exclude=.venv,Archive,Examples/Draft
 
       - name: Run Tests
         run: |
+          . .venv/bin/activate
           cd log-grid
           python -m pytest -v --junitxml=report.xml --cov=. --cov-report xml:coverage.xml --cov-report term
