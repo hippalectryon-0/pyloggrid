@@ -156,8 +156,7 @@ pypi:
     - poetry config http-basic.gitlab gitlab-ci-token "$CI_JOB_TOKEN"
     - poetry build
     - poetry publish --repository gitlab
-    - poetry config repositories.test-pypi https://test.pypi.org/legacy/
-    - poetry config pypi-token.test-pypi $PYPI_TEST_API_TOKEN
-    - poetry publish --repository test-pypi
-  only:
-    - master
+    - poetry config pypi-token.pypi $PYPI_API_TOKEN
+    - poetry publish
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^\d+\.\d+\.\d+$/
