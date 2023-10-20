@@ -27,7 +27,7 @@ jobs:
           python3.11 -m pip install poetry
           python3.11 -m virtualenv .venv
           . .venv/bin/activate
-          
+
 
       - name: Install dependencies
         run: |
@@ -43,14 +43,13 @@ jobs:
           cd pyloggrid/LogGrid
           make
 
-      - name: Check Git installation
-        run: git --version
-
-
       - name: Run pre-commit
         run: |
+          pwd
           . .venv/bin/activate
           cp log-grid/.pre-commit-config.yaml .
+          pwd
+          ls
           pre-commit run --all-files --show-diff-on-failure
 
       - name: Run Flake8
