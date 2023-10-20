@@ -43,6 +43,10 @@ jobs:
           cd pyloggrid/LogGrid
           make
 
+      - name: Check Git installation
+        run: git --version
+
+
       - name: Run pre-commit
         run: |
           . .venv/bin/activate
