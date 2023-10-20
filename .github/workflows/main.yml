@@ -1,0 +1,71 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: setup
+        run: |
+          cp log-grid/.pre-commit-config.yaml .
+          cp log-grid/pyproject.toml .
+      - uses: actions/setup-python@v3
+      - uses: pre-commit/action@v3.0.0
+
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: tempuser8755/python3.11-clang15-omp:latest
+    strategy:
+      matrix:
+        python-version: [ '3.11' ]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: 'x64'
+
+      - name: Install Poetry & venv
+        run: |
+          python3.11 -m pip install poetry
+          python3.11 -m virtualenv .venv
+          . .venv/bin/activate
+
+      - name: Install dependencies
+        run: |
+          . .venv/bin/activate
+          cd log-grid
+          poetry install
+          pip uninstall -y pyloggrid # remove from site-packages, use local source instead (instead we get wrong coverage)
+
+      - name: Compile
+        run: |
+          . .venv/bin/activate
+          cd log-grid
+          cd pyloggrid/LogGrid
+          make
+
+      - name: Run Flake8
+        run: |
+          . .venv/bin/activate
+          cd log-grid
+          flake8 . --count --ignore=E203,E266,E402,E501,E731,E741,W503 --show-source --statistics --exclude=.venv,Archive,Examples/Draft
+
+      - name: Run Tests
+        run: |
+          . .venv/bin/activate
+          cd log-grid
+          python -m pytest -v --junitxml=report.xml --cov=. --cov-report xml:coverage.xml --cov-report term
