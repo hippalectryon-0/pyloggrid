@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef _MSC_VER
-    #include <ms_stdint.h>
     #include "Complex.h"  // Microsoft Complex.h
 #else
     #include <stdint.h>

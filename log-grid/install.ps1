@@ -40,6 +40,7 @@ if (!(Get-Command mingw32-make -ErrorAction SilentlyContinue))
 
     # Install Mingw via Chocolatey
     choco install mingw -y
+    choco install make -y
 }
 
 Write-Host "Mingw is installed and ready to use"
@@ -78,6 +79,7 @@ Invoke-Expression "& $python_cmd -m virtualenv $venv"
 $activate_script = Join-Path $venv "Scripts\Activate.ps1"
 Invoke-Expression "& $activate_script"
 Invoke-Expression "& poetry install --with=docs,examples"
+Invoke-Expression "& pip uninstall pyloggrid -y"  # If you're installing from here you probably want to work with the local source and not the one in site-packages
 Invoke-Expression "& pre-commit install"
 Remove-Item build -Recurse
 "Python packages installed"

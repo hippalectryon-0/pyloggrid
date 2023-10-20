@@ -23,6 +23,7 @@ python$python_v -m poetry config virtualenvs.in-project true
 python$python_v -m virtualenv $venv
 . .venv/bin/activate
 poetry install --with=docs,examples
+pip uninstall pyloggrid -y  # If you're installing from here you probably want to work with the local source and not the one in site-packages
 rm -rf build
 pre-commit install
 

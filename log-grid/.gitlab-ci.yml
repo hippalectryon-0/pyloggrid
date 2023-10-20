@@ -56,6 +56,7 @@ venv:
     - python3.11 -m virtualenv .venv
     - . .venv/bin/activate
     - poetry install --with=docs,examples
+    - pip uninstall pyloggrid -y  # remove from site-packages, use local source instead (instead we get wrong coverage)
   interruptible: true
 
 compile:
@@ -90,7 +91,7 @@ unittest:
   interruptible: true
   script:
     - source .venv/bin/activate
-    - pytest -v --junitxml=report.xml --cov=. --cov-report xml:coverage.xml --cov-report term
+    - python -m pytest -v --junitxml=report.xml --cov=. --cov-report xml:coverage.xml --cov-report term  # /!\ we need "python -m" to add the python path
   artifacts: # reports for gitlab pipelines
     when: always
     reports:
@@ -108,7 +109,7 @@ benchmark:
     - source .venv/bin/activate
     - cd Utils
     - python benchmarking_parallel.py
-    - - python benchmarking_anyparam.py
+    - python benchmarking_anyparam.py
   artifacts:
     paths:
       - Utils/*.png
@@ -160,4 +161,3 @@ pypi:
     - poetry publish --repository test-pypi
   only:
     - master
-    - pypi-package  # TODO remove

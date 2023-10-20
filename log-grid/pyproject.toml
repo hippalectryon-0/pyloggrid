@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyloggrid"
-version = "2.1.1a5"
+version = "2.2.0"
 description = "A python library to perform simulations on logarithmic lattices"
 readme = """readme_pypi.md"""
 authors = ["Amaury Barral <amaury.barral@protonmail.com>"]
@@ -11,7 +11,7 @@ include = [  # package build for .whl
     { path = "pyloggrid/LogGrid/*.so", format = "wheel" }
 ]
 repository = "https://drf-gitlab.cea.fr/amaury.barral/log-grid"
-documentation = "https://amaury.barral.drf-pages.cea.fr/log-grid/"  # TODO change to RTD
+documentation = "https://pyloggrid.readthedocs.io/"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"

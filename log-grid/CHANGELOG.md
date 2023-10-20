@@ -5,22 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.2.0]
 
 ### Added
 
 - Add `A11 - 3D rotation` to archive
+- Add proper packaging to release on pypi. Update the documentation accordingly
+- Add support for MSVC in `convolver.c` (MSVC isn't supported in the installation yet though)
 
 ### Changed
 
 - Change license
 - Change doc to *Sphinx*, and improve many docs
 - Rename `plotLib.pad_array_2D` to `plotLib.rightpad_array_2D`
+- Rename `LogGrid.convolver` to `LogGrid.compute_convolution_kernel` for clarity
+- Update requirements
+- Improve installation documentation
 
 ### Fixed
 
 - Fix `pyyaml` version
 - Fix normalization of `datasci.randcomplex` (was square instead of circular)
+- Fix the documentation build for newer Sphinx versions
+- Fix files not being cleaned by makefiles
+- Fix docs in .gitignore
 
 ## [2.1.0]
 
