@@ -30,7 +30,7 @@ jobs:
       - name: Install dependencies
         run: |
                poetry install
-          #          remove from site-packages, use local source instead (instead we get wrong coverage)
+#          remove from site-packages, use local source instead (instead we get wrong coverage)
                pip uninstall -y pyloggrid
 
       - name: Compile
