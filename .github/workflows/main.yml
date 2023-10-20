@@ -47,7 +47,6 @@ jobs:
         run: |
           . .venv/bin/activate
           cp log-grid/.pre-commit-config.yaml .
-          pre-commit install
           pre-commit run --all-files --show-diff-on-failure
 
       - name: Run Flake8
