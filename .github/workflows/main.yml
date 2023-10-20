@@ -4,6 +4,15 @@ on:
   push:
 
 jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: setup
+        run: cp log-grid/.pre-commit-config.yaml .
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+      - uses: pre-commit/action@v3.0.0
+
   build:
     runs-on: ubuntu-latest
     container:
@@ -28,7 +37,6 @@ jobs:
           python3.11 -m virtualenv .venv
           . .venv/bin/activate
 
-
       - name: Install dependencies
         run: |
           . .venv/bin/activate
@@ -43,16 +51,7 @@ jobs:
           cd pyloggrid/LogGrid
           make
 
-      - name: Run pre-commit
-        run: |
-          . .venv/bin/activate
-          cd log-grid
-          black . --config pyproject.toml
-          pycln . --config pyproject.toml
-          isort . --settings-path pyproject.toml
-
       - name: Run Flake8
-        if: success() || failure()
         run: |
           . .venv/bin/activate
           cd log-grid
