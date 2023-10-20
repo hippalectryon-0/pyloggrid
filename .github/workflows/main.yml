@@ -46,9 +46,10 @@ jobs:
       - name: Run pre-commit
         run: |
           . .venv/bin/activate
-          cp log-grid/.pre-commit-config.yaml .
-          pwd
-          ls -la
+          cd log-grid
+          black . --config pyproject.toml
+          pycln --config pyproject.toml
+          isort --settings-path pyproject.toml
           pre-commit run --all-files --show-diff-on-failure
 
       - name: Run Flake8
