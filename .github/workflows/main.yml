@@ -22,29 +22,32 @@ jobs:
 
       - name: Install Poetry
         run: |
-          cd log-grid
           curl -sSL https://install.python-poetry.org | python -
           poetry config virtualenvs.in-project true
 
       - name: Install dependencies
         run: |
+          cd log-grid
           poetry install
           pip uninstall -y pyloggrid # remove from site-packages, use local source instead (instead we get wrong coverage)
 
       - name: Compile
         run: |
+          cd log-grid
           cd pyloggrid/LogGrid
           make
 
       - name: Run pre-commit
         run: |
-          . .venv/bin/activate
+          cd log-grid
           pre-commit run --all-files --show-diff-on-failure
 
       - name: Run Flake8
         run: |
+          cd log-grid
           flake8 . --count --ignore=E203,E266,E402,E501,E731,E741,W503 --show-source --statistics --exclude=.venv,Archive,Examples/Draft
 
       - name: Run Tests
         run: |
+          cd log-grid
           python -m pytest -v --junitxml=report.xml --cov=. --cov-report xml:coverage.xml --cov-report term
