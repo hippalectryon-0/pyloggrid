@@ -21,6 +21,8 @@ log-grid/*
 !log-grid/Utils/
 !log-grid/tests/
 !log-grid/Simulations/
-!log-grid/.gitlab
 !log-grid/readme_pypi.md
 !log-grid/build.py
+
+# Exclude top-level pre-commit
+.pre-commit-config.yaml
