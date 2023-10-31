@@ -9,8 +9,9 @@ fi
 tag="$1"
 
 rm -rf log-grid || true
-git config advice.detachedHead false
-git clone "https://drf-gitlab.cea.fr/amaury.barral/log-grid.git" -b "$tag"
+git -c advice.detachedHead=false clone "https://drf-gitlab.cea.fr/amaury.barral/log-grid.git" -b "$tag"
 cd log-grid || exit 1
 rm -rf .git || true
+cp .pre-commit-config.yaml ../
+cp LICENSE ../
 cd ..

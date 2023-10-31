@@ -8,8 +8,9 @@ if ([string]::IsNullOrEmpty($tag)) {
 }
 
 Remove-Item -Path .\log-grid -Recurse -ErrorAction SilentlyContinue
-git config advice.detachedHead false
-git clone https://drf-gitlab.cea.fr/amaury.barral/log-grid.git -b $tag
+git -c advice.detachedHead=false clone "https://drf-gitlab.cea.fr/amaury.barral/log-grid.git" -b "$tag"
 cd log-grid
 Remove-Item -Recurse -Force .git
+Copy-Item -Path ".\.pre-commit-config.yaml" -Destination ".."
+Copy-Item -Path ".\LICENSE" -Destination ".."
 Set-Location ../
