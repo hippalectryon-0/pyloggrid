@@ -30,11 +30,23 @@ Accurate simulations of fluid dynamics, such as Direct Numerical Simulations (DN
 
 # Statement of need
 
-A minimal Matlab framework by @campolina2020loglatt. already exists, but other than relying on proprietary software, its capabilities are limited. PyLogGrid was designed to offer a solid, open-source, and extensive framework to perform log-lattice simulations. It enables both simulation, analysis and visualisation of log-lattice data. The choice of Python+C offers both great flexibility and speed. PyLogGrid offers sigificantly more options than @campolina2020loglatt, including several solvers, support for $k_i=0$ modes, failsafe simulations, optimized save formats, etc.
+A minimal Matlab framework by @campolina2020loglatt already exists, but it relies on proprietary software, and its capabilities are limited. PyLogGrid was designed to offer a solid, open-source, and extensive framework to perform log-lattice simulations. It enables both simulation, analysis and visualisation of log-lattice data. The choice of Python+C offers both great flexibility and speed. PyLogGrid offers sigificantly more options than @campolina2020loglatt, including several solvers, support for $k_i=0$ modes, failsafe simulations, optimized save formats, tests and documentation, etc.
 
 PyLogGrid has been used in a number of publications [@barral2023asymptotic; @costa2023reversible].
 
-# Availability, usage and documentation
+# Basic features
+
+*This corresponds to version 2.2.1*.
+
+The basics of PyLogGrid consists in a `Solver` class to simulate equations on log-lattices, and a `DataExplorer` class to visualize and analyze resulting data.
+
+Solving equations uses [rkstiff](https://github.com/whalenpt/rkstiff) [@whalen2015exponential] by default. Convolutions are optimized in C, can be multithreaded, parallelized, and use AVX.
+Simulations can be interrupted and resumed, and the grid size is adaptative.
+Equations are easy to write as a number of mathematical operators are available through `pyloggrid.LogGrid.Grid.Math`.
+
+Several libraries in `pyloggrid.Libs` provide helper functions for different use cases such as I/O, data science, and (interactive) plotting. Data visualization is also multithreaded.
+
+# Availability and documentation
 
 PyLogGrid can be installed via Pypi using `pip install pyloggrid`. Its documentation is hosted on [readthedocs](https://pyloggrid.readthedocs.io), and includes a tutorial.
 
@@ -46,3 +58,4 @@ We thank A. Mailybaev, C. Campolina, G. Costa, Q. Pikeroen, A. Lopez for stimula
 
 This work received funding from the Ecole Polytechnique, from ANR EXPLOIT, grant agreement no. ANR-16-CE06-0006-01 and ANR TILT grant agreement no. ANR-20-CE30-0035.
 
+# References
