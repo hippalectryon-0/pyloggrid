@@ -28,9 +28,11 @@ static always_inline Complex ComplexMult(Complex a, Complex b) {
     return result;
 }
 
+#ifdef _MSC_VER
 static always_inline Complex ComplexAddMSVC(Complex a, Complex b) {
     return _Cbuild(creal(a) + creal(b), cimag(a)+cimag(b));
 }
+#endif
 
 static always_inline void convolve_inner(const size_t i, const uint32_t *restrict kernel, const Complex *restrict f, const Complex *restrict g, Complex *restrict arr_out) {
     Complex c1 = f[kernel[i + 1]];
@@ -65,7 +67,7 @@ void convolve(const uint32_t *restrict kernel, const uint32_t kernel_N, const Co
 }
 
 void convolve_omp(const uint32_t *restrict kernel, const uint32_t kernel_N, const Complex *restrict f, const Complex *restrict g, Complex *restrict arr_out) {
-    int i;  // can't use <for(int i ...> because of MSVC
+    uint32_t i;  // can't use <for(int i ...> because of MSVC
     #pragma omp parallel for schedule(static)
     for (i = 0; i < kernel_N; i += 4) {
         convolve_inner(i, kernel, f, g, arr_out);
@@ -74,7 +76,7 @@ void convolve_omp(const uint32_t *restrict kernel, const uint32_t kernel_N, cons
 
 void convolve_list_omp(const uint32_t *kernel, const uint32_t kernel_N, const Complex **f_list, const Complex **g_list, const uint32_t f_size, const uint32_t N_batch, Complex *arr_out) {
     for (size_t i_batch = 0; i_batch < N_batch; i_batch++) {
-        int i;  // can't use <for(int i ...> because of MSVC
+        uint32_t i;  // can't use <for(int i ...> because of MSVC
         #pragma omp parallel for schedule(static)
         for (i = 0; i < kernel_N; i += 4) {
             convolve_inner(i, kernel, f_list[i_batch], g_list[i_batch], &arr_out[i_batch *f_size]);
@@ -82,7 +84,7 @@ void convolve_list_omp(const uint32_t *kernel, const uint32_t kernel_N, const Co
     }
 }
 
-static inline always_inline void convolve_list_batch_V_inner(const size_t i_batch, const size_t i, const uint32_t *restrict kernel, const Complex **restrict f_list, const Complex **restrict g_list, const uint32_t f_size, Complex *restrict arr_out, const size_t V) {
+static always_inline void convolve_list_batch_V_inner(const size_t i_batch, const size_t i, const uint32_t *restrict kernel, const Complex **restrict f_list, const Complex **restrict g_list, const uint32_t f_size, Complex *restrict arr_out, const size_t V) {
     #ifdef _MSC_VER
         Complex* c1 = (Complex*)malloc(V * sizeof(Complex));
         Complex* c2 = (Complex*)malloc(V * sizeof(Complex));
@@ -134,7 +136,7 @@ static inline always_inline void convolve_list_batch_V_inner(const size_t i_batc
     #endif
 }
 
-static inline always_inline void convolve_list_batch_V(const uint32_t *restrict kernel, const uint32_t kernel_N, const Complex **restrict f_list, const Complex **restrict g_list, const uint32_t f_size, const uint32_t N_batch, Complex *restrict arr_out, const size_t V) {
+static always_inline void convolve_list_batch_V(const uint32_t *restrict kernel, const uint32_t kernel_N, const Complex **restrict f_list, const Complex **restrict g_list, const uint32_t f_size, const uint32_t N_batch, Complex *restrict arr_out, const size_t V) {
     if (N_batch % V != 0) { __builtin_unreachable(); }
 
     for (size_t i_batch = 0; i_batch < N_batch; i_batch+=V) {
@@ -144,10 +146,10 @@ static inline always_inline void convolve_list_batch_V(const uint32_t *restrict 
     }
 }
 
-static inline always_inline void convolve_list_batch_V_omp(const uint32_t *restrict kernel, const uint32_t kernel_N, const Complex **restrict f_list, const Complex **restrict g_list, const uint32_t f_size, const uint32_t N_batch, Complex *restrict arr_out, const size_t V) {
+static always_inline void convolve_list_batch_V_omp(const uint32_t *restrict kernel, const uint32_t kernel_N, const Complex **restrict f_list, const Complex **restrict g_list, const uint32_t f_size, const uint32_t N_batch, Complex *restrict arr_out, const size_t V) {
     if (N_batch % V != 0) { __builtin_unreachable(); }
 
-    int i_batch;  // can't use <for(int i ...> because of MSVC
+    uint32_t i_batch;  // can't use <for(int i ...> because of MSVC
     #pragma omp parallel for schedule(static) collapse(2)
     for (i_batch = 0; i_batch < N_batch; i_batch+=V) {
         for (size_t i = 0; i < kernel_N; i += 4) {

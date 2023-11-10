@@ -27,13 +27,19 @@ class build_ext(build_ext_orig):
         makefile_dir = str(extdir.parent.absolute())
         # required otherwise whl build errors
         extdir = pathlib.Path(self.get_ext_fullpath(ext.name))
-        extdir.mkdir(parents=True, exist_ok=True)
+        if str(extdir).endswith(".so"):  # TODO make sure this also works for Windows
+            with open(str(extdir), "w") as f:
+                f.write("dummy file")
+        else:
+            extdir.mkdir(parents=True, exist_ok=True)
 
         try:
             os.chdir(makefile_dir)
             if sys.platform == "win32":
+                self.spawn(["make", "clean", "-f", "Makefile.windows"])
                 self.spawn(["make", "-f", "Makefile.windows"])
             else:
+                self.spawn(["make", "clean"])
                 self.spawn(["make"])
 
             print("Module compilation completed successfully.")

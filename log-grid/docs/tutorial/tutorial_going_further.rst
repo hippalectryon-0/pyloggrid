@@ -8,5 +8,6 @@ The documentation provides a wide range of helper functions for tasks such as da
 
 To help you get started, here are some recommended resources:
 
-* :doc:`../documentation/doc_using_the_solver`
+* :class:`pyloggrid.LogGrid.Framework.Solver`
+* :doc:`../documentation/documentation`
 * :doc:`../autoapi/index`

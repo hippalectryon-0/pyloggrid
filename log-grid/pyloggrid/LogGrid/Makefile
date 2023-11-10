@@ -21,5 +21,6 @@ $(TARGET): $(OBJECTS)
 	$(CC) $(CFLAGS) $< -o $@
 
 clean:
+	rm -rf convolver.cpython-*.so ../../convolver.cpython-*.so
 	rm -f $(OBJECTS) $(TARGET) compute_convolution_kernel.html compute_convolution_kernel.c *.so *.pyd *.o
 	rm -rf build

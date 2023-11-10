@@ -1,7 +1,9 @@
 """Misc small libraries that help with various tasks, too small to fit in their own library file"""
+from __future__ import annotations
+
 import time
 
-import numpy as np
+from pyloggrid.Libs.singlethread_numpy import np
 
 
 def composed_decs(*decs):
@@ -156,3 +158,18 @@ class TimeTracker:
             return res or "0ms"
 
         return "{" + ", ".join([f"{k}: {format_time(v)}" for k, v in sorted(self.elapsed_time.items(), key=lambda item: -item[1])]) + "}"
+
+
+def rightpad_array_2D(a: np.ndarray, Nx: int, Ny: int) -> np.ndarray:
+    """Pad a 2D+ array with zeros.
+
+    The padding is done at the large coordinate edge (it is not centered).
+
+    Args:
+        a: array to pad
+        Nx: amount of pixels to pad in first dimension
+        Ny: amount of pixels to pad in second dimension
+    """
+    b = np.zeros((a.shape[0] + Nx, a.shape[1] + Ny) + a.shape[2:]).astype(a.dtype)
+    b[: a.shape[0], : a.shape[1]] = a
+    return b

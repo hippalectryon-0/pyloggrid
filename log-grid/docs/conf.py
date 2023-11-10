@@ -1,3 +1,4 @@
+# sphinx-build -b html docs/ docs/build -a -j auto
 import tomllib
 from datetime import datetime
 
@@ -32,6 +33,7 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinx.ext.napoleon",
     "sphinx.ext.todo",
+    # 'sphinx.ext.autosectionlabel',
     "IPython.sphinxext.ipython_console_highlighting",
     "IPython.sphinxext.ipython_directive",
     "myst_parser",
@@ -59,7 +61,7 @@ python_use_unqualified_type_names = True
 
 
 def skip_submodules(app, what, name, obj, skip, options):
-    for el in [".logger", "DataExplorer.T", "DataExplorer.PlotFun", "DataExplorer.DrawFuncDict", "Grid.convolver_c", "Grid._setup_convolver_c"]:
+    for el in [".logger", "DataExplorer.T", "DataExplorer.PlotFun", "DataExplorer.DrawFuncDict", "Grid.convolver_c"]:
         if name.endswith(el):
             skip = True
             break
@@ -86,4 +88,5 @@ intersphinx_mapping = {
     "xarray": ("https://docs.xarray.dev/en/stable/", None),
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
     "numpy": ("https://numpy.org/doc/stable", None),
+    "matplotlib": ("https://matplotlib.org/stable", None),
 }

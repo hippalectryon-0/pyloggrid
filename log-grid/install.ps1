@@ -73,13 +73,14 @@ if (-Not(Test-Path -Path "python$python_v") -and $args[0] -ne "-s")
 
 ### Install python packages & enter venv
 "Installing python packages"
-Invoke-Expression "& $python_cmd -m pip install --upgrade poetry --no-warn-script-location"
+Invoke-Expression "& $python_cmd -m pip install --upgrade pip setuptools"
+Invoke-Expression "& $python_cmd -m pip install --upgrade poetry"
 Invoke-Expression "& $python_cmd -m poetry config virtualenvs.in-project true"
 Invoke-Expression "& $python_cmd -m virtualenv $venv"
 $activate_script = Join-Path $venv "Scripts\Activate.ps1"
 Invoke-Expression "& $activate_script"
-Invoke-Expression "& poetry install --with=docs,examples"
-Invoke-Expression "& pip uninstall pyloggrid -y"  # If you're installing from here you probably want to work with the local source and not the one in site-packages
+Invoke-Expression "& python$python_v/Scripts/poetry install --with=docs,examples -v"
+Invoke-Expression "& python -m pip uninstall pyloggrid -y"  # If you're installing from here you probably want to work with the local source and not the one in site-packages
 Invoke-Expression "& pre-commit install"
 Remove-Item build -Recurse
 "Python packages installed"
@@ -88,6 +89,7 @@ Remove-Item build -Recurse
 ## Compile convolver
 "Compiling convolver"
 cd pyloggrid/LogGrid
+Invoke-Expression "& make -f Makefile.windows clean"
 Invoke-Expression "& make -f Makefile.windows"
 cd ../../
 "Finished compiling convolver"
