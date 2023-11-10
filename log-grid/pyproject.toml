@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyloggrid"
-version = "2.2.1"
+version = "2.3.0"
 description = "A python library to perform simulations on logarithmic lattices"
 readme = """readme_pypi.md"""
 authors = ["Amaury Barral <amaury.barral@protonmail.com>"]
