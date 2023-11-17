@@ -13,6 +13,14 @@ authors:
       orcid: 0000-0002-3644-723X
       affiliation: 2
       corresponding: true
+    - name: Guillaume Costa
+      orcid: 0009-0008-9913-459X
+      affiliation: 1
+    - name: Quentin Pikeroen
+      orcid: 0009-0006-0345-6339
+      affiliation: 1
+    - name: Adrien Lopez
+      affiliation: 1
 affiliations:
  - name: Université Paris-Saclay, CEA, SPEC, 91191 Gif-sur-Yvette, France
    index: 1
@@ -21,6 +29,8 @@ affiliations:
 date: 11 November 2023
 bibliography: paper.bib
 ---
+
+_The authors contributed to this work in unequal proportions, with Amaury Barral taking the lead in the majority of the research, while the remaining authors made valuable but comparatively minor contributions._
 
 # Summary
 
@@ -52,7 +62,7 @@ PyLogGrid can be installed via Pypi using `pip install pyloggrid`. Its documenta
 
 # Acknowledgements
 
-We thank A. Mailybaev, C. Campolina, G. Costa, Q. Pikeroen, A. Lopez for stimulating discussions and minor contributions.
+We thank A. Mailybaev, C. Campolina for stimulating discussions and minor contributions.
 
 # Funding
 
