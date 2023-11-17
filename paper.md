@@ -42,7 +42,7 @@ Accurate simulations of fluid dynamics, such as Direct Numerical Simulations (DN
 
 A minimal Matlab framework by @campolina2020loglatt already exists, but it relies on proprietary software, and its capabilities are limited. PyLogGrid was designed to offer a solid, open-source, and extensive framework to perform log-lattice simulations. It enables both simulation, analysis and visualisation of log-lattice data. The choice of Python+C offers both great flexibility and speed. PyLogGrid offers sigificantly more options than @campolina2020loglatt, including several solvers, support for $k_i=0$ modes, failsafe simulations, optimized save formats, tests and documentation, etc.
 
-PyLogGrid has been used in a number of publications [@barral2023asymptotic; @costa2023reversible].
+PyLogGrid has been used in a number of publications [@barral2023asymptotic; @costa2023reversible; @atmos14111690].
 
 # Basic features
 
