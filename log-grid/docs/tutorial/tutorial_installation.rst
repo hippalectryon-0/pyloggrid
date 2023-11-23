@@ -9,7 +9,7 @@ The easiest way is to simply install the package via ``pip``:
 
 .. code-block:: bash
 
-   git install pyloggrid
+   pip install pyloggrid
 
 .. important:: Requirements
 
@@ -39,11 +39,22 @@ The easiest way is to simply install the package via ``pip``:
 
 .. warning:: The Windows version is significantly less optimized than the Linux version, and does not support multithreading.
 
+.. _Manual installation:
 
-Manual installation (Linux)
-***************************
+Manual installation (from source)
+*********************************
 
-*This guide is written for Ubuntu 22.x. If you are using a different version of Linux, you may need to adapt the instructions.*
+.. note:: For the Gitlab version (see :doc:`../documentation/doc_github_gitlab`), replace ``git@github.com:hippalectryon-0/pyloggrid.git`` by ``https://drf-gitlab.cea.fr/amaury.barral/log-grid.git`` and ``cd pyloggrid/log-grid`` by ``cd log-grid``.
+
+The ``pip`` install installs the package in `site-packages`. The source installation installs the package locally, which is useful to make modifications to the source code.
+If you want to install from source to ``site-packages`` after changing the code (such that you can ``import pyloggrid`` from anywhere in your virtual environment), run ``poetry install`` after the instructions below.
+
+.. warning:: If you decide to install from source to ``site-packages``, we recommend changing the name of the local directory in order to make sure you're not importing the *local* version instead of the ``site-packages`` version.
+
+Linux
+=====
+
+.. note:: This guide is written for Ubuntu 22.x. If you are using a different version of Linux, you may need to adapt the instructions.
 
 Install git:
 
@@ -55,8 +66,8 @@ Clone the repository:
 
 .. code-block:: bash
 
-   git clone https://drf-gitlab.cea.fr/amaury.barral/log-grid.git
-   cd log-grid
+   git clone git@github.com:hippalectryon-0/pyloggrid.git
+   cd pyloggrid/log-grid
 
 Run the install script:
 
@@ -66,10 +77,10 @@ Run the install script:
 
 This script will install required packages and dependencies, create a Python virtual environment, and compile the C code.
 
-Manual installation (Windows)
-*****************************
+Windows
+=======
 
-*Note: the windows installation script may be less stable. Moreover, the windows version does not support multithreading.*
+.. warning:: The windows installation script may be less stable. Moreover, the windows version does not support multithreading.
 
 Install `git <https://git-scm.com/download/win>`_.
 
@@ -77,8 +88,8 @@ Clone the repository:
 
 .. code-block:: bash
 
-   git clone https://drf-gitlab.cea.fr/amaury.barral/log-grid.git
-   cd log-grid
+   git clone git@github.com:hippalectryon-0/pyloggrid.git
+   cd pyloggrid/log-grid
 
 Run the install script:
 
@@ -87,4 +98,4 @@ Run the install script:
    powershell.exe -ExecutionPolicy bypass
    ./install.ps1
 
-This will download python locally and install mingw via choco, download the required dependencies and compile the C code. It might ask for admin rights to install choco, and open popups during the python extraction.
+This will download python locally and install MinGW via choco, download the required dependencies and compile the C code. It might ask for admin rights to install choco, and open popups during the python extraction.

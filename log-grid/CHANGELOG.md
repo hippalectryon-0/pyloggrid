@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.1]
+
+### Fixed
+
+- Fix build process
+
+## [2.3.0]
+
+### Changed
+
+- Improve docs
+- Improve `Utils/benchmark_c` scripts and visualization
+- Move `Maths` and `Physics` subclasses outside of the `Grid` class
+- Move `ETD4RK` from `Examples` to `Utils`
+
+### Fixed
+
+- Error on a,b not integers in l_params
+- Fix a potential error where `plastic` was not supplied in `l_params`
+- Fix compiler warnings on `convolver.c`
+- Fix signature of interactive functions in `plotLib`
+- Improve stability of windows installation
+
+### Removed
+
+- Remove obsolete `Examples/2D_basilisk/`
+
 ## [2.2.1]
 
 ### Changed
@@ -15,6 +42,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Fix Gitlab CI to only publish on new master tags
 - Fix docs
+- Fix `poetry install` when compiled files already exist
 
 ## [2.2.0]
 

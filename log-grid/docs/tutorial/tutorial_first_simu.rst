@@ -8,7 +8,7 @@ Unlike other big frameworks, users don't provide a "simulation file" composed on
 
 -------------------
 
-To get started, navigate to the ``Simulations`` folder:
+To get started, let's look at the examples in the ``Simulations`` folder of the source (available on `Github <https://github.com/hippalectryon-0/pyloggrid/tree/main/log-grid>`_ ). Copy it and navigate inside:
 
 .. code-block:: bash
 
@@ -29,7 +29,7 @@ At the top of the ``NS3D.py`` file, you will find several functions that define 
 * ``initial_conditions`` defines the initial conditions for the simulation.
 * ``update_gridsize`` specifies when to update the size of the simulation grid.
 
-For an in-depth explanation on how to use those, read :doc:`this page <../documentation/doc_using_the_solver>`.
+For an in-depth explanation on how to use those, read :class:`pyloggrid.LogGrid.Framework.Solver`.
 
 Parameters
 ##########

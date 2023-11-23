@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyloggrid"
-version = "2.2.1"
+version = "2.3.1"
 description = "A python library to perform simulations on logarithmic lattices"
 readme = """readme_pypi.md"""
 authors = ["Amaury Barral <amaury.barral@protonmail.com>"]
@@ -18,7 +18,7 @@ python = ">=3.9,<3.12"
 numpy = "^1.26.1"
 scipy = "^1.11.2"
 matplotlib = "^3.8.0"
-rkstiff = "^0.3.0"
+rkstiff = "^0.3.0"  # ODE solver
 joblib = "^1.2.0"  # parallelization
 scienceplots = "^2.0.1"  # pyplot styles
 cython = "^3.0.4"  # Compilation

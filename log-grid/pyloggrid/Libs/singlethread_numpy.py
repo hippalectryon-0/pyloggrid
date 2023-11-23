@@ -37,6 +37,7 @@ os.environ["MKL_NUM_THREADS"] = "1"
 os.environ["NUMEXPR_NUM_THREADS"] = "1"
 
 # noinspection PyUnresolvedReferences
-import numpy as np
+import numpy as np_
 
+np = np_  # Otherwise sphinx-autoapi doesn't detect it
 np.array(0)  # to avoid F401 in flake8 lint

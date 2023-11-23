@@ -30,7 +30,7 @@ Next, you need to set the parameters for the analysis:
     save_path = f"results/save_3D_f0{f0:.2e}_ReF{Re_F:.2e}"  # where the simulation data is saved
     temp_path = "results/temp"  # temp path to store images before compiling to video
     N_points = 500  # how many time points max to load
-    n_jobs = 3  # parallelisation
+    n_jobs = 3  # parallelization
     loadfromsave = False  # load already computed results /!\ if your data has changed, this may show the old data
 
 Treatment functions
@@ -58,7 +58,7 @@ Here's an example of how to create the ``get_custom`` function:
 
         return {"qty1": qty1, "qty2": qty2}  # return the computed quantities
 
-And here's an example of how to create the corresponding  ̀ ̀plot_custom`` function:
+And here's an example of how to create the corresponding ``plot_custom`` function:
 
 .. code-block:: python
 
@@ -90,7 +90,7 @@ When you run the script
 you should see a graph like this
 
 .. image:: ../static/img/tutorial/tutorial_graph.png
-  :alt: Simulation treatment graph
+  :alt: <image: Simulation treatment graph>
 
 Arbitrary functions
 *******************

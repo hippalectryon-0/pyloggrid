@@ -67,7 +67,7 @@ def D1_to_fields(linear: np.ndarray, field_names: list[str], field_shape: (int, 
     return {field_names[i]: linears_with_fields[i].reshape(field_shape) for i in range(len(field_names))}
 
 
-class CustIntegrator:
+class _CustIntegrator:
     """Abstract integrator class"""
 
     def __init__(
@@ -143,12 +143,12 @@ class CustIntegrator:
         raise NotImplementedError
 
 
-class ViscDopri(CustIntegrator):
+class ViscDopri(_CustIntegrator):
     """DOPRI5-based solver made specifically for log grids.
 
     A nonlinear update step is decoupled from the linear update step.
     Special care is given to handling numerical (float-induced) random numerical errors which yield huge gradients.
-    Based on scipy's DOPRI5 implementation
+    Based on scipy's DOPRI5 implementation.
 
     Args:
         equation_nl: linear-less update step
@@ -331,11 +331,13 @@ class ViscDopri(CustIntegrator):
         self.status = "finished"
 
 
-class ETD4RK(CustIntegrator):
-    r"""Based on `Exponential Time Differencing for Stiff Systems | Elsevier Enhanced Reader`, Cox & Matthews, 2001, equations (26)-(29).
+class ETD4RK(_CustIntegrator):
+    r"""Based on Cox & Matthews (2002). Exponential time differencing for stiff systems. *Journal of Computational Physics*, 176(2), 430-455.
 
     Warning:
         Only designed for constant-in-time viscosities
+
+    .. note:: See ``Utils/thresholds.py`` in the source code for the determination of the thresholds used in computing Taylor series
 
     Args:
         equation_nl: linear-less update step
@@ -449,7 +451,7 @@ class ETD4RK(CustIntegrator):
         self.status = "finished"
 
 
-class ETD35(CustIntegrator):
+class ETD35(_CustIntegrator):
     """Based on https://github.com/whalenpt/rkstiff
 
     Warning:
@@ -521,27 +523,60 @@ class Solver:
     """Generic top-level object to handle solving log-grid equations
 
     Args:
-        fields_names: the names of the grid-shaped fields
-        equation_nl: the function that performs the linear-less update step. Returns the time derivative of the fields
-        D: space dimension
-        l_params: parameters that define the grid parameter `̀`l`` as a dict with keys ``{"a", "b", "plastic"}``. "plastic" supercedes all other. For ``l=2``, chose ``a=b=None``
-        k_min: minimum k of the grid. Default is defined by ``Grid``.
+        D: dimension of physical space (usually 1, 2 or 3)
+        l_params: parameters that define the grid parameter `̀`l`` as a dict with keys ``{"a", "b", "plastic"}``. See below for more detail.
+        fields_names: the names of the scalar grid-shaped fields
+        equation_nl: the function that performs the nonlinear update step. Returns the time derivative of the fields
+        equation_l: implicit visocsity update step, called after the RK step has ended. Returns the new fields and their new time derivative
+        k_min: minimum k of the grid. Default is defined by :class:`pyloggrid.LogGrid.Grid.Grid`.
+        k0: whether there's a k0 mode
         simu_params: physical quantities relevant to the simulation, fixed for the whole simulation.
         n_threads: Number of threads to use, default is max/2 (not recommended, run benchmarking for better results. If running batch simulations, 1 is optimal.)
-        equation_l: implicit visocsity update step, called after the RK step has ended. Returns the new fields and their new time derivative
-        k0: whether there's a k0 mode"""
+
+    In `pyloggrid`, simulating equations is done through the :class:`Solver` class.
+
+    Initializing the simulation
+    ###########################
+
+    A `Solver` object is initialized with parameters of the simulation:
+
+    * Geometric parameters (``D, l_params, k_min, k0``)
+        * ``l_params`` is a ``dict`` that describes the scaling parameter ``l`` of the grid. If the "plastic" key is set to ``True`` (``l_params={"plastic": True, ...}``) then ``l~=1.3`` (the plastic number). If ``plastic`` is not ``True``, then keys ``a, b`` must be specified and have integer values, in which case ``l`` is the solution to ``l**b-l**a=1``. In particular if ``l_params={"a": 1, "b": 2}`` then ``l~=1.6`` (the golden number). To get the special case ``l=2``, use ``l_params={"a":None, "b": None}``.
+
+        .. important:: Choosing either ``"plastic": True``, ``"a": int, "b": int`` or ``"a": None, "b": None`` doesn't just change the scaling of the grid, but also the number of interactions per point for the convolution (listed here in decreasing order), which affects both the physics and the required computing power.
+
+        * ``k0`` is a bool that indicates whether the axes :math:`k_i=0` are included. Enabling this comes at a significant performance cost, and greatly modifies the interaction between grid points.
+
+        * ``k_min`` is the minimum absolute value of a wavevector *on each axis*, excluding zeros. This is **not** the minimum magnitude of a wavevector on the grid, which would be :math:`\\sqrt{D}k_{min}` in :math:`D` dimensions.
+
+    * Equation parameters (``field_names``, ``equation_nl``, ``equation_l``, ``simu_params``)
+        * For stability and performance reasons, the equation to solve is divided into two parts: one that is proportional to the scalar input ``equation_l``, and the rest ``equation_nl``. If your equation is :math:`\\partial_t u=A(u)−b\\cdot u`, then the linear part is :math:`−b`, and the nonlinear part is :math:`A(t, u)`.
+        * ``equation_l, equation_nl`` expect functions that take as arguments ``t: float, grid: Grid, simu_params: dict`` and return a dict ``{"field_name": d/dt_field_name, ...}``.
+
+        .. warning:: Note that the linear part must be time-independent.
+
+        * ``simu_params`` are arbitrary (serializable) constants used in the simulation. The ``fields`` named by ``fields_names``, on the other hand, are grid-shaped complex scalars., i.e. "the fields being simulated".
+
+    Running the simulation
+    ######################
+
+    Simulations are ran by calling the :func:`solve` method.
+
+    .. warning:: Although in theory you can use the ``solve`` method several times on a single ``Solver`` object, this isn't a common use case. Do so at your own risks, but please report unexpected behavior to us.
+
+    """
 
     def __init__(
         self,
-        fields_names: list[str],
-        equation_nl: Callable[[float, Grid, dict], dict],
         D: int,
         l_params: dict[str, Union[float, bool]],
+        fields_names: list[str],
+        equation_nl: Callable[[float, Grid, dict], dict],
         equation_l: Callable[[float, Grid, dict], dict[str, np.ndarray]],
         k_min: float = None,
+        k0: bool = False,
         simu_params: dict = None,
         n_threads: int = None,
-        k0: bool = False,
     ):
         self.equation_nl = equation_nl
         self.equation_l = equation_l
@@ -556,16 +591,15 @@ class Solver:
         self.grid = Grid(D=D, l_params=l_params, N_points=1, k_min=k_min, fields_name=fields_names, n_threads=n_threads, k0=k0)
         self.grid.time_tracker = self.time_tracker
 
-    def load_parameters(self, path: str) -> tuple[float, float]:
+    def _load_parameters(self, path: str) -> tuple[float, float]:
         """Loads simulation parameters from settings.json.
-
         Overwrites instance variables
 
         Args:
             path: directory to load the settings from
 
         Returns:
-            physical time of the simulation's last step and timestep
+            (last used time, last used timstep)
         """
         settings = read_json_settings(path)
 
@@ -594,7 +628,7 @@ class Solver:
 
         return float(step_data["t"]), float(step_data["dt"])
 
-    def save_step_all(self, t: float, dt: float, path: str) -> None:
+    def _save_step_all(self, t: float, dt: float, path: str) -> None:
         """Save the current step. Saves both fields and settings.
 
         Args:
@@ -620,21 +654,29 @@ class Solver:
         dt_params: dict[str, Optional[float]] = None,
         solver: typing.Literal["ViscDopri", "ETD4RK", "ETD35"] = "ETD35",
     ) -> None:
-        """Solve the solver's equation with the required numerical parameters.
+        """Solve the solver's equation with the provided numerical parameters.
 
         Args:
             save_path: where to save the fields and simulation parameters. Will backup if exists, will create otherwise
             initial_conditions: if str: either ``"loadfromsave"`` to resume simulation, [legacy: or the path of the ``.npz`` save file whence to initialize the fields].
                 If tuple ``(name, step)``: load step ``step`` from .h5 ``name``.
                 Otherwise: function that returns the initial fields.
-                If "loadfromsave", it will override all dependant settings: ``end_simulation, rtol, atol, l_params, D, fields_name, simu_params, grid, k_min``
             solver_params: params forwarded to the solver
             init_t: initial simulation time
             end_simulation: dict of thresholds to end the simulation: ``{t: max physical time, elapsed_time: max real time spent computing, step: max save step}``
             save_one_in: save one step to file every X ``ode_step``
             update_gridsize_cb: optional callback to change the grid size after a step. Returns ``None`` if no change is to be made, returns the new grid size otherwise.
             dt_params: ``{dt0: initial timestep, dtmin, dtmax}``
-            solver: among ``"ETD35"`` (default), ``"ETD4RK"``, ``"ViscDopri"``
+            solver: ``"ETD35"`` for :class:`ETD35` (default), ``"ETD4RK"`` for :class:`ETD4RK`, ``"ViscDopri"`` for :class:`ViscDopri`
+
+        Details on a few parameters
+        ###########################
+
+        * If ``save_path="<path>/<foldername>"`` already exists on disk, the existing directory will be renamed to ``<path>/bk_<foldername>_<TIMESTAMP>``. Otherwise, it will be automatically created.
+        * If ``initial_conditions="loadfromsave"`` then settings and initial conditions will be loaded from the last step of the existing simulation in ``save_path``. This will override the following arguments: ``end_simulation, l_params, D, fields_name, simu_params, k_min, k0``.
+        * To load from a specific step of a .h5 simulation file, set ``loadfromsave=(<filepath>:str, <step>:int)``.
+        * Otherwise, ``initial_conditions`` must be a function that takes (fields, grid, simu_params) and returns the initial fields.
+        * ``update_gridsize_cb`` is an optional function to dynamically change the grid size. It takes (grid) and returns either None (no change) or a new grid size.
         """
         if solver_params is None:
             solver_params = {}
@@ -656,7 +698,7 @@ class Solver:
             params = {"end_simulation": end_simulation, "solver_params": solver_params, "simu_params": self.simu_params}  # override previous parameters
             update_json_settings(save_path, params, update=True)
 
-            init_t, dt = self.load_parameters(save_path)
+            init_t, dt = self._load_parameters(save_path)
             if dt > 0:  # dt=0 if only the initial step is saved
                 if dt_params is None:
                     dt_params = {}
@@ -752,7 +794,7 @@ class Solver:
                 self.time_tracker.start_timer("update_gridsize")
                 logger.info(f"Updating the grid: old N = {self.grid.N_points}, new N = {new_N_points}")
                 self.grid = self.grid.to_new_size_empty(new_N_points).load_fields(self.grid.fields)
-                self.save_step_all(t, dt, save_path)
+                self._save_step_all(t, dt, save_path)
 
                 logger.info("Starting new solver on updated grid")
                 self.time_tracker.end_timer("update_gridsize")
@@ -772,7 +814,7 @@ class Solver:
             # Save data
             with self.time_tracker("disk"):
                 if stopsim or self.ode_step % save_one_in == 0:
-                    self.save_step_all(t, dt, save_path)
+                    self._save_step_all(t, dt, save_path)
 
             return stopsim
 
@@ -862,7 +904,7 @@ class Solver:
             case _:
                 raise ValueError(f"Unknown solver provided: {solver}")
         if initial_conditions != "loadfromsave":
-            self.save_step_all(init_t, 0, save_path)  # save first step
+            self._save_step_all(init_t, 0, save_path)  # save first step
         with contextlib.suppress(SolverInterruptedError):  # Used to restart with a different grid
             ode.solve()
             logger.info(f"Finished sim. at t={ode.t}, success: {ode.status}, ode_steps: {self.ode_step}, saved steps:{self.step}, elapsed: {self.time_tracker}")

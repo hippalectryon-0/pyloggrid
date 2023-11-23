@@ -1,6 +1,7 @@
 """Utilities for fast plotting"""
 from __future__ import annotations
 
+from pyloggrid.Libs.misc import rightpad_array_2D
 from pyloggrid.Libs.singlethread_numpy import np
 
 np.zeros(0)  # Do not remove - used to force singlethread_numpy to be imported before the other libraries when refactoring
@@ -27,110 +28,18 @@ if typing.TYPE_CHECKING:
     from pyloggrid.LogGrid.Grid import Grid
 
 
-def rightpad_array_2D(a: np.ndarray, Nx: int, Ny: int) -> np.ndarray:
-    """Pad a 2D+ array with zeros.
-
-    The padding is done at the large coordinate edge (it is not centered).
-
-    Args:
-        a: array to pad
-        Nx: amount of pixels to pad in first dimension
-        Ny: amount of pixels to pad in second dimension
-    """
-    b = np.zeros((a.shape[0] + Nx, a.shape[1] + Ny) + a.shape[2:]).astype(a.dtype)
-    b[: a.shape[0], : a.shape[1]] = a
-    return b
-
-
-def plot2axes() -> tuple[Figure, Any, Any]:
-    """Create a plot with left and right axis.
-
-    Axes are set to `Any` since the real class is hidden in ``mpl.axes._subplots``.
-
-    Returns:
-        ``figure, ax1, ax2``
-    """
-    fig, ax1 = plt.subplots()
-    ax2 = ax1.twinx()
-    return fig, ax1, ax2
-
-
-def plot2axesX() -> tuple[Figure, Any, Any]:
-    """plot with bottom and top axis.
-
-    Axes are set to `Any` since the real class is hidden in ``mpl.axes._subplots``.
-    """
-    fig, ax1 = plt.subplots()
-    ax2 = ax1.twiny()
-    return fig, ax1, ax2
-
-
-def labels(xlabel: str = "", ylabel: str = "", title: str = "", ax: Any = None) -> None:
-    """Add labels and title to an axis.
-
-    Args:
-        xlabel
-        ylabel
-        title
-        ax: if specified, the axis on which to add the labels; defaults to the current axis
-    """
-    ax = ax or plt.gca()
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
-    ax.set_title(title)
-
-
-def scatter(ax=None, *args, **kwargs) -> Any:
-    """Plot a scatter plot using ``plot()`` instead of ``scatter()``.
-
-    (not handled the same way, e.g. zindex)
-
-    Args:
-        ax: the axis to use, defaults to
-    """
-    ax = ax or plt.gca()
-    if "linestyle" not in kwargs:
-        kwargs["linestyle"] = ""
-    return ax.plot(*args, **kwargs)
-
-
-def pltshowm(full: bool = True, save: str = None, legend: bool = True, compact: bool = True, tight: bool = False) -> None:
-    """Display the pyplot figure maximized.
-
-    Args:
-        legend: if ``False``, do not add a legend
-        save: if specified, save path for the figure
-        full: if ``False``, doe not go fullscreen
-        compact: if ``True``, use ``plt.tight_layout``
-        tight: if ``True``, autoscale with tight boundaries
-    """
-    if full:
-        man = plt.get_current_fig_manager()
-        try:
-            man.frame.Maximize(True)
-        except AttributeError:  # wrong backend, try QT
-            try:
-                man.window.showMaximized()
-            except AttributeError:  # probably running a backend that can only save the image, not display it
-                matplotlib.pyplot.gcf().set_size_inches(19.2, 10.8)
-    if legend:
-        plt.legend()
-    if tight:
-        plt.autoscale(tight=True)
-    if compact:
-        plt.tight_layout()
-    if save:
-        plt.savefig(save, dpi=300, bbox_inches="tight")
-    plt.show()
-
-
-def initFormat(size: float = 1, txtsize: float = None) -> None:
+# Unified formatting
+def initFormat(size: float = 1, txtsize: float = None, rcParams: dict = None) -> None:
     """Sets up pyplot formatting for scientific publications.
 
     Args:
         size: the figure's size relative to the default one
         txtsize: scaling for the figure's fonts, if not set defaults to ``size``
+        rcParams: parameters to append to :attr:`matplotlib.rcParams`
     """
+
+    if rcParams is None:
+        rcParams = {}
 
     def force_add_cycler(cyclers: list["Cycler"]) -> "Cycler":
         """add two cyclers, whatever their length"""
@@ -177,67 +86,95 @@ def initFormat(size: float = 1, txtsize: float = None) -> None:
         ),
         "image.cmap": "cividis",
     }
-    matplotlib.rcParams.update(plt_params)
+    matplotlib.rcParams.update(plt_params | rcParams)
 
 
-def rand_cmap(
-    nlabels: int, type_: typing.Literal["bright", "soft"] = "bright", first_color_black: bool = True, last_color_black: bool = False
-) -> "LinearSegmentedColormap":
-    """Creates a random colormap to be used together with matplotlib. Useful for segmentation tasks
+# Common
+def pltshowm(full: bool = True, save: str = None, legend: bool = True, compact: bool = True, tight: bool = False) -> None:
+    """Display the pyplot figure maximized.
 
     Args:
-        nlabels: Number of labels (size of colormap)
-        type_: 'bright' for strong colors, 'soft' for pastel colors
-        first_color_black: Option to use first color as black
-        last_color_black: Option to use last color as black
+        legend: if ``False``, do not add a legend
+        save: if specified, save path for the figure
+        full: if ``False``, doe not go fullscreen
+        compact: if ``True``, use ``plt.tight_layout``
+        tight: if ``True``, autoscale with tight boundaries
+    """
+    if full:
+        man = plt.get_current_fig_manager()
+        try:
+            man.frame.Maximize(True)
+        except AttributeError:  # wrong backend, try QT
+            try:
+                man.window.showMaximized()
+            except AttributeError:  # probably running a backend that can only save the image, not display it
+                matplotlib.pyplot.gcf().set_size_inches(19.2, 10.8)
+    if legend:
+        plt.legend()
+    if tight:
+        plt.autoscale(tight=True)
+    if compact:
+        plt.tight_layout()
+    if save:
+        plt.savefig(save, dpi=300, bbox_inches="tight")
+    plt.show()
+
+
+def labels(xlabel: str = "", ylabel: str = "", title: str = "", ax: Any = None) -> None:
+    """Add labels and title to an axis.
+
+    Args:
+        xlabel
+        ylabel
+        title
+        ax: if specified, the axis on which to add the labels; defaults to the current axis
+    """
+    ax = ax or plt.gca()
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.set_title(title)
+
+
+def scatter(ax=None, *args, **kwargs) -> Any:
+    """Plot a scatter plot using ``plot()`` instead of ``scatter()``.
+
+    (not handled the same way, e.g. zindex)
+
+    Args:
+        ax: the axis to use, defaults to
+    """
+    ax = ax or plt.gca()
+    if "linestyle" not in kwargs:
+        kwargs["linestyle"] = ""
+    return ax.plot(*args, **kwargs)
+
+
+# Axes
+def plot2axes() -> tuple[Figure, Any, Any]:
+    """Create a plot with left and right axis.
+
+    Axes are set to `Any` since the real class is hidden in ``mpl.axes._subplots``.
 
     Returns:
-        colormap for matplotlib
+        ``figure, ax1, ax2``
     """
-    import colorsys
-
-    from pyloggrid.Libs.singlethread_numpy import np
-
-    np.zeros(0)  # Do not remove - used to force singlethread_numpy to be imported before the other libraries when refactoring
-
-    from matplotlib.colors import LinearSegmentedColormap
-
-    if type_ not in ("bright", "soft"):
-        raise ValueError('Please choose "bright" or "soft" for type')
-
-    # Generate color map for bright colors, based on hsv
-    if type_ == "bright":
-        randHSVcolors = [(np.random.uniform(low=0.0, high=1), np.random.uniform(low=0.2, high=1), np.random.uniform(low=0.9, high=1)) for _ in range(nlabels)]
-
-        randRGBcolors = [colorsys.hsv_to_rgb(HSVcolor[0], HSVcolor[1], HSVcolor[2]) for HSVcolor in randHSVcolors]
-        if first_color_black:
-            randRGBcolors[0] = [0, 0, 0]
-
-        if last_color_black:
-            randRGBcolors[-1] = [0, 0, 0]
-
-        random_colormap = LinearSegmentedColormap.from_list("new_map", randRGBcolors, N=nlabels)
-
-    elif type_ == "soft":
-        low = 0.6
-        high = 0.95
-        randRGBcolors: list = [
-            (np.random.uniform(low=low, high=high), np.random.uniform(low=low, high=high), np.random.uniform(low=low, high=high)) for _ in range(nlabels)
-        ]
-
-        if first_color_black:
-            randRGBcolors[0] = [0, 0, 0]
-
-        if last_color_black:
-            randRGBcolors[-1] = [0, 0, 0]
-        random_colormap = LinearSegmentedColormap.from_list("new_map", randRGBcolors, N=nlabels)
-    else:
-        raise ValueError
-
-    return random_colormap
+    fig, ax1 = plt.subplots()
+    ax2 = ax1.twinx()
+    return fig, ax1, ax2
 
 
-def save_animation_from_slider(slider: Slider, save: str, temp_dir: str, N: int = 100) -> None:
+def plot2axesX() -> tuple[Figure, Any, Any]:
+    """plot with bottom and top axis.
+
+    Axes are set to `Any` since the real class is hidden in ``mpl.axes._subplots``.
+    """
+    fig, ax1 = plt.subplots()
+    ax2 = ax1.twiny()
+    return fig, ax1, ax2
+
+
+# Sliders
+def _save_animation_from_slider(slider: Slider, save: str, temp_dir: str, N: int = 100) -> None:
     """Save a matplotlib graph with a slider as an animation.
 
     Args:
@@ -264,26 +201,85 @@ def save_animation_from_slider(slider: Slider, save: str, temp_dir: str, N: int 
             writer.append_data(img.astype(np.uint8))
 
 
-def enable_slider_save(f: Callable) -> Callable:
+def dec_enable_slider_save(f: Callable) -> Callable:
     """Decorator to save an animation from a slider graph.
 
-    This adds two arguments to the decorated function, ``save`` and ``temp_path``, which if supplied are forwarded to :func:`save_animation_from_slider`.
+    This adds two arguments to the decorated function, ``save`` and ``temp_path``, which if supplied are forwarded to :func:`_save_animation_from_slider`.
     """
 
     def wrapper(*args, save: str = None, temp_path: str = None, **kwargs):
         """:param save if not None, save an animation of the slider as mp4 to a file named <save>
         :param temp_path if save is not None, where to store generated images
         """
-        slider = f(*args, **kwargs)
+        res = f(*args, **kwargs)
+        slider = res[0]
         if save:
-            save_animation_from_slider(slider, save, temp_path)
-        return slider
+            assert temp_path is not None, "You must provide <temp_path>"
+            _save_animation_from_slider(slider, save, temp_path)
+        return res
 
     return wrapper
 
 
-@enable_slider_save
-def interactive_3D_logplot_by_z(X: np.ndarray, Y: np.ndarray, V: np.ndarray, Z: np.ndarray = None) -> tuple[Any, Any]:
+@dec_enable_slider_save
+def interactive_spectrum(ts: np.ndarray, ks: np.ndarray, spectra: dict[str, np.ndarray], quantities: dict[str, np.ndarray]) -> tuple[Slider, Any, Any]:
+    r"""An interactive spectrum + arbitrary time-dependant quantities.
+
+    Warning:
+        As for all interactive functions, the returned val must be assigned, ex via ``_ = my_interactive_function(...)``
+
+    LHS: spectrum vs k
+    RHS: quantity vs t
+    current time is changed via a slider
+
+    Args:
+        ts: time array
+        ks: ks array for each time
+        spectra: dict label->array
+        quantities: dict label->quantity
+    """
+
+    fig, axs = plt.subplot_mosaic("AB")
+    ax1, ax2 = axs["A"], axs["B"]
+
+    ax1.set_xscale("log")
+    ax1.set_yscale("log")
+    padfact = 2
+    ax1.set_xlim(min(np.min(i) for i in ks) / padfact, max(np.max(i) for i in ks) * padfact)
+    ax1.set_ylim(1e-200, max(np.max(i) for i in list(spectra.values())[0]) * padfact * 1e5)
+    ax1.set_xlabel("$k$")
+    ax1.set_ylabel("spectra")
+
+    # noinspection PyMissingOrEmptyDocstring
+    def update_graph(_=None):
+        i = int(n_slider.val - 1)
+        t = ts[i]
+        vl.set_xdata([t, t])
+        for k, l in spectrum_lines.items():
+            l.set_data(ks[i], spectra[k][i])
+
+    # Sliders & Buttons
+    fig.subplots_adjust(bottom=0.2)
+    n_slider = Slider(ax=fig.add_axes((0.25, 0.1, 0.65, 0.03)), label="Step", valfmt="%d", valmin=1, valmax=ts.size, valinit=1, valstep=1)
+    n_slider.on_changed(update_graph)
+
+    spectrum_lines = {}
+    for k in spectra:
+        spectrum_lines[k] = scatter(ax1, [0], [1], label=k)[0]
+    ax1.legend()
+
+    for k, v in quantities.items():
+        scatter(ax2, ts, v, label=k)
+    ax2.legend()
+    vl = ax2.axvline(ts[0], ls="-", color="r", lw=1, zorder=10)
+    ax2.set_xlabel("$t$")
+
+    update_graph()
+    return n_slider, ax1, ax2
+
+
+@dec_enable_slider_save
+def interactive_3D_logplot_by_z(X: np.ndarray, Y: np.ndarray, V: np.ndarray, Z: np.ndarray = None) -> tuple[Slider, Any, Any]:
     """An interactive 3D logplot, sliced by ``Z`` if given.
 
     Warning:
@@ -385,7 +381,7 @@ def interactive_3D_logplot_by_z(X: np.ndarray, Y: np.ndarray, V: np.ndarray, Z: 
     ## Sliders & Buttons
     # fig.subplots_adjust(bottom=-0.1)
     n_slider = Slider(
-        ax=fig.add_axes([0.25, 0.1, 0.65, 0.03]),
+        ax=fig.add_axes((0.25, 0.1, 0.65, 0.03)),
         label="Step",
         valfmt="%d",
         valmin=1,
@@ -396,15 +392,15 @@ def interactive_3D_logplot_by_z(X: np.ndarray, Y: np.ndarray, V: np.ndarray, Z: 
     n_slider.on_changed(update_graph)
     z_slider, btn_toggle_z = None, None
     if Z is not None:
-        z_slider_ax = fig.add_axes([0.1, 0.25, 0.0225, 0.63])
+        z_slider_ax = fig.add_axes((0.1, 0.25, 0.0225, 0.63))
         z_slider = Slider(ax=z_slider_ax, label="n_z", valfmt="%d", valmin=0, valmax=X.shape[2] - 1, valinit=X.shape[2] // 2, valstep=1, orientation="vertical")
         z_slider_text = z_slider_ax.text(0.5, 0.5, "")
         z_slider.on_changed(update_graph)
 
-    btn_rescale = Button(fig.add_axes([0.8, 0.025, 0.1, 0.04]), "Rescale", hovercolor="0.975")
+    btn_rescale = Button(fig.add_axes((0.8, 0.025, 0.1, 0.04)), "Rescale", hovercolor="0.975")
     btn_rescale.on_clicked(rescale)
     if Z is not None:
-        btn_toggle_z = Button(fig.add_axes([0.6, 0.025, 0.1, 0.04]), "Toggle z mode", hovercolor="0.975")
+        btn_toggle_z = Button(fig.add_axes((0.6, 0.025, 0.1, 0.04)), "Toggle z mode", hovercolor="0.975")
         btn_toggle_z.on_clicked(toggle_z)
 
     graph = ax.scatter([], [], [], label=r"$\Re ux$", alpha=0.5)
@@ -413,75 +409,15 @@ def interactive_3D_logplot_by_z(X: np.ndarray, Y: np.ndarray, V: np.ndarray, Z: 
     rescale(doall=True)
     graph.set_cmap("coolwarm")
 
-    return ax, (graph, z_slider, n_slider, btn_rescale, btn_toggle_z)
+    return n_slider, ax, (graph, z_slider, btn_rescale, btn_toggle_z)
 
 
-@enable_slider_save
-def interactive_spectrum(ts: np.ndarray, ks: np.ndarray, spectra: dict[str, np.ndarray], quantities: dict[str, np.ndarray]) -> tuple[Slider, Any, Any]:
-    r"""An interactive spectrum + arbitrary time-dependant quantities.
-
-    Warning:
-        As for all interactive functions, the returned val must be assigned, ex via ``_ = my_interactive_function(...)``
-
-    LHS: spectrum vs k
-    RHS: quantity vs t
-    current time is changed via a slider
-
-    Args:
-        ts: time array
-        ks: ks array for each time
-        spectra: dict label->array
-        quantities: dict label->quantity
-
-    Todo:
-        Add an example of usage ?
-    """
-
-    fig, axs = plt.subplot_mosaic("AB")
-    ax1, ax2 = axs["A"], axs["B"]
-
-    ax1.set_xscale("log")
-    ax1.set_yscale("log")
-    padfact = 2
-    ax1.set_xlim(min(np.min(i) for i in ks) / padfact, max(np.max(i) for i in ks) * padfact)
-    ax1.set_ylim(1e-200, max(np.max(i) for i in list(spectra.values())[0]) * padfact * 1e5)
-    ax1.set_xlabel("$k$")
-    ax1.set_ylabel("spectra")
-
-    # noinspection PyMissingOrEmptyDocstring
-    def update_graph(_=None):
-        i = int(n_slider.val - 1)
-        t = ts[i]
-        vl.set_xdata([t, t])
-        for k, l in spectrum_lines.items():
-            l.set_data(ks[i], spectra[k][i])
-
-    # Sliders & Buttons
-    fig.subplots_adjust(bottom=0.2)
-    n_slider = Slider(ax=fig.add_axes([0.25, 0.1, 0.65, 0.03]), label="Step", valfmt="%d", valmin=1, valmax=ts.size, valinit=1, valstep=1)
-    n_slider.on_changed(update_graph)
-
-    spectrum_lines = {}
-    for k in spectra:
-        spectrum_lines[k] = scatter(ax1, [0], [1], label=k)[0]
-    ax1.legend()
-
-    for k, v in quantities.items():
-        scatter(ax2, ts, v, label=k)
-    ax2.legend()
-    vl = ax2.axvline(ts[0], ls="-", color="r", lw=1, zorder=10)
-    ax2.set_xlabel("$t$")
-
-    update_graph()
-    return n_slider, ax1, ax2
-
-
-@enable_slider_save
+@dec_enable_slider_save
 def interactive_grid_imshow(
     grid: Grid,
     update_data: Callable[[Any, float], np.ndarray],
     slider_params: tuple[float | None, float | None, float | None, str | None, str | None] = (0, 1, None, "", None),
-) -> Slider:
+) -> tuple[Slider, Any]:
     """Imshow with slider, with axes formatted by the grid.
 
     Warning:
@@ -518,15 +454,15 @@ def interactive_grid_imshow(
 
     update_graph()
 
-    return n_slider
+    return n_slider, ax
 
 
-@enable_slider_save
+@dec_enable_slider_save
 def interactive_grid_3Dslice(
     grid: Grid,
     update_data: Callable[[Any, float], np.ndarray],
     slider_params: tuple[float | None, float | None, float | None, str | None, str | None] = (0, 1, None, "", None),
-) -> Slider:
+) -> tuple[Slider, Any]:
     """Interactive 3D slice of a grid field.
 
     Warning:
@@ -569,20 +505,20 @@ def interactive_grid_3Dslice(
     ## Sliders & Buttons
     fig.subplots_adjust(bottom=0.2)
     vmin, vmax, vstep, slidertitle, vformat = slider_params
-    n_slider = Slider(ax=fig.add_axes([0.25, 0.1, 0.65, 0.03]), label=slidertitle, valfmt=vformat, valmin=vmin, valmax=vmax, valinit=vmin, valstep=vstep)
+    n_slider = Slider(ax=fig.add_axes((0.25, 0.1, 0.65, 0.03)), label=slidertitle, valfmt=vformat, valmin=vmin, valmax=vmax, valinit=vmin, valstep=vstep)
     n_slider.on_changed(update_graph)
 
     update_graph()
 
-    return n_slider
+    return n_slider, ax
 
 
-@enable_slider_save
+@dec_enable_slider_save
 def interactive_3D_logplot_positive(
     update_data: Callable[[Any, float], np.ndarray],
     slider_params: tuple[float | None, float | None, float | None, str | None, str | None] = (0, 1, None, "", None),
     threshold_fact: float = 5,
-) -> Slider:
+) -> tuple[Slider, Any]:
     """3D logplot of scalar field on kx,ky,kz>0.
 
     Warning:
@@ -622,12 +558,70 @@ def interactive_3D_logplot_positive(
     ## Sliders & Buttons
     fig.subplots_adjust(bottom=0.2)
     vmin, vmax, vstep, slidertitle, vformat = slider_params
-    n_slider = Slider(ax=fig.add_axes([0.25, 0.1, 0.65, 0.03]), label=slidertitle, valfmt=vformat, valmin=vmin, valmax=vmax, valinit=vmin, valstep=vstep)
+    n_slider = Slider(ax=fig.add_axes((0.25, 0.1, 0.65, 0.03)), label=slidertitle, valfmt=vformat, valmin=vmin, valmax=vmax, valinit=vmin, valstep=vstep)
     n_slider.on_changed(update_graph)
 
     update_graph()
 
-    return n_slider
+    return n_slider, ax
+
+
+# Other
+def rand_cmap(
+    nlabels: int, type_: typing.Literal["bright", "soft"] = "bright", first_color_black: bool = True, last_color_black: bool = False
+) -> "LinearSegmentedColormap":
+    """Creates a random colormap to be used together with matplotlib. Useful for segmentation tasks
+
+    Args:
+        nlabels: Number of labels (size of colormap)
+        type_: 'bright' for strong colors, 'soft' for pastel colors
+        first_color_black: Option to use first color as black
+        last_color_black: Option to use last color as black
+
+    Returns:
+        colormap for matplotlib
+    """
+    import colorsys
+
+    from pyloggrid.Libs.singlethread_numpy import np
+
+    np.zeros(0)  # Do not remove - used to force singlethread_numpy to be imported before the other libraries when refactoring
+
+    from matplotlib.colors import LinearSegmentedColormap
+
+    if type_ not in ("bright", "soft"):
+        raise ValueError('Please choose "bright" or "soft" for type')
+
+    # Generate color map for bright colors, based on hsv
+    if type_ == "bright":
+        randHSVcolors = [(np.random.uniform(low=0.0, high=1), np.random.uniform(low=0.2, high=1), np.random.uniform(low=0.9, high=1)) for _ in range(nlabels)]
+
+        randRGBcolors = [colorsys.hsv_to_rgb(HSVcolor[0], HSVcolor[1], HSVcolor[2]) for HSVcolor in randHSVcolors]
+        if first_color_black:
+            randRGBcolors[0] = [0, 0, 0]
+
+        if last_color_black:
+            randRGBcolors[-1] = [0, 0, 0]
+
+        random_colormap = LinearSegmentedColormap.from_list("new_map", randRGBcolors, N=nlabels)
+
+    elif type_ == "soft":
+        low = 0.6
+        high = 0.95
+        randRGBcolors: list = [
+            (np.random.uniform(low=low, high=high), np.random.uniform(low=low, high=high), np.random.uniform(low=low, high=high)) for _ in range(nlabels)
+        ]
+
+        if first_color_black:
+            randRGBcolors[0] = [0, 0, 0]
+
+        if last_color_black:
+            randRGBcolors[-1] = [0, 0, 0]
+        random_colormap = LinearSegmentedColormap.from_list("new_map", randRGBcolors, N=nlabels)
+    else:
+        raise ValueError
+
+    return random_colormap
 
 
 initFormat()

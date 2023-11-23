@@ -1,33 +1,34 @@
-"""run a benchmark for current build"""
+"""
+run a benchmark for current build
+
+Ran as ``run_benchmark.py flags N_cycles N``
+"""
 import sys
 import time
+from pathlib import Path
 
 import numpy as np
 import numpy.ctypeslib as npct
 from matplotlib import pyplot as plt
 
-convolver_c = npct.load_library("convolver_c", ".")  # ../../Utils/
-import ctypes as ct
+# noinspection PyProtectedMember
+from pyloggrid.LogGrid.Grid import _setup_convolver_c
+
+convolver_c = npct.load_library("convolver_c", ".")
+
+_setup_convolver_c(convolver_c)
+
+N_cycles = float(sys.argv[2])
+N = int(sys.argv[3])
 
 
-def define_arguments():
-    """Convenience function for defining the arguments of the functions inside the imported module."""
-
-    # Define the arguments accepted by the C functions. This is not strictly necessary,
-    # but it is good practice for avoiding segmentation faults.
-    npflags = ["C_CONTIGUOUS"]  # Require a C contiguous array in memory
-    ui32_1d_type = npct.ndpointer(dtype=np.uint32, ndim=1, flags=npflags)
-    complex_1d_type = npct.ndpointer(dtype=complex, ndim=1, flags=npflags)
-
-    args = [ui32_1d_type, ct.c_uint32, complex_1d_type, complex_1d_type, complex_1d_type]
-    convolver_c.convolve.argtypes = args
-
-
-define_arguments()
-
-
-def do_benchmark(N=13, N_cycles=1e3, show=True):
-    """benchmark"""
+def do_benchmark(N: int = 13, N_cycles: float = 1e4, show: bool = True) -> None:
+    """do a benchmark
+    Args:
+        N: the grid size
+        N_cycles: the number of convolutions to do
+        show: if True, plot a hist of results
+    """
     from pyloggrid.LogGrid.Grid import Grid
 
     def do_cycle(params: dict) -> None:
@@ -71,7 +72,9 @@ def do_benchmark(N=13, N_cycles=1e3, show=True):
     flags = sys.argv[1]
     if flags.startswith("[]"):  # default, can be run several timesq
         flags = flags.replace("[]", f"[DEFAULT_{np.random.randint(0, 9999)}]")
+    Path("results").mkdir(exist_ok=True)
     np.save(f"results/flags={flags}", cycles_times)
 
 
-do_benchmark(show=False, N_cycles=1e4, N=15)
+if __name__ == "__main__":
+    do_benchmark(show=False, N_cycles=N_cycles, N=N)

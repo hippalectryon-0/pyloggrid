@@ -68,19 +68,23 @@ Both ``output.h5`` and ``settings.json`` are frequently written to. As a result,
 
 *Downside*: Now that we save all the outputs as a big file, the backup file takes a significant space, effectively doubling the disk space of the simulations. The solution is to prune the backup files once the simulation is finished. A python tool to automatically prune a directory recursively is planned in issue #31.
 
-Old format (9de8071cd20936f8a2c0839f91fa63272eff66aa)
-*****************************************************
+Old format
+##########
 
-*This save format is still supported in 2.x, but may be discontinued in a future version*
+*Gitlab commit: 9de8071cd20936f8a2c0839f91fa63272eff66aa*
+
+.. warning:: This save format is still supported in 2.x, but may be discontinued in a future version
 
 Each time step is saved in a separate ``.npz`` file. Each file contains a dict with keys ``{fields, t, N_points, k_min, elapsed_time, k0, ...}`` (same meaning as above).
 
 *Downside*: This creates a lot of small files, which is a pain when moving, deleting, listing etc.
 
-Older format (86a41d9d99e26b2c3bebcce7ff15c2ccb0f521c5)
-*******************************************************
+Older format
+############
 
-*This save format is still supported in 2.x, but may be discontinued in a future version*
+*Gitlab commit: 86a41d9d99e26b2c3bebcce7ff15c2ccb0f521c5*
+
+.. warning:: This save format is still supported in 2.x, but may be discontinued in a future version
 
 Each time step is saved in a separate ``.npz`` file. Each file contains a dict with keys ``{arr_0, arr_1, ...}`` which are then remapped onto ``{fields, t, N_points, k_min, elapsed_time, k0, ...}`` (same meaning as above).
 

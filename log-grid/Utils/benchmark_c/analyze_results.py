@@ -35,7 +35,7 @@ def plot_results():
     fig, axs = plt.subplots(N_ax, 1)
     if N_ax == 1:
         axs = [axs]
-    colors = ["blue", "red", "green", "orange"]
+    colors = ["blue", "red", "green", "orange", "teal", "yellow"]
     for env_i, (env, res_env) in enumerate(results.items()):
         ax = axs[env_i]
         for i, (flags, data) in enumerate(res_env.items()):
@@ -43,13 +43,18 @@ def plot_results():
             ax.semilogy(i, np.mean(data), linestyle="", marker="o", color="black")
             ax.text(i - 0.3, np.mean(data), flags, rotation="vertical")
         ax.plot([], marker="o", color=colors[env_i], label=env or "default")
+        if env_i == 0:
+            ax.set_ylabel("execution time")
+        ax.set_xticks([])
+        ax.set_xlim(-0.5, None)
         ax.legend()
 
     if default_comp in results:
         ax = axs[-1]
         default_i = None
         for i, flags in enumerate(results[default_comp].keys()):
-            if flags.startswith("'DEFAULT"):
+            is_default = flags.startswith("'DEFAULT")
+            if is_default:
                 if default_i is None:
                     default_i = i
                 i = default_i
@@ -58,12 +63,19 @@ def plot_results():
                     data = res_env[flags]
                     ax.semilogy(i, np.mean(data), linestyle="", marker="o", color=colors[env_i])
             text_pos = np.mean(results[default_comp][flags])
-            if flags.startswith("'DEFAULT"):
-                flags = "DEFAULT"
+            if is_default:
+                if flags.endswith("0'"):
+                    flags = "DEFAULT"
+                else:
+                    continue
             ax.text(i - 0.3, text_pos, flags, rotation="vertical")
+        ax.set_xticks([])
+        ax.set_title("Aggregated averages")
+        ax.set_xlim(-0.5, None)
 
     # plt.tight_layout()
     plt.show()
 
 
-plot_results()
+if __name__ == "__main__":
+    plot_results()
