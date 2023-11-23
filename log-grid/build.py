@@ -18,20 +18,12 @@ class build_ext(build_ext_orig):
     def run(self):
         for ext in self.extensions:
             self.build_makefile(ext)
-        super().run()
 
     def build_makefile(self, ext):
         cwd = pathlib.Path().absolute()
         # this seems necesssary to keep the files installed ?
         extdir = pathlib.Path(self.build_lib) / ext.name
         makefile_dir = str(extdir.parent.absolute())
-        # required otherwise whl build errors
-        extdir = pathlib.Path(self.get_ext_fullpath(ext.name))
-        if str(extdir).endswith(".so"):  # TODO make sure this also works for Windows
-            with open(str(extdir), "w") as f:
-                f.write("dummy file")
-        else:
-            extdir.mkdir(parents=True, exist_ok=True)
 
         try:
             os.chdir(makefile_dir)
