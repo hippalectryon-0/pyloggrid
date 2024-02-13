@@ -65,6 +65,7 @@ Python + C for High Performance
   :width: 200
   :alt: <image: A computer>
 
+
 Our library combines the ease of use and readability of Python with the speed and performance of compiled C. Get the best of both worlds for optimized execution speed.
 
 

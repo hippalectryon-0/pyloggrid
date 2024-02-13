@@ -8,7 +8,7 @@ Why traditional solvers don't work
 Traditional solvers, such as Runge-Kutta, don't work out-of-the-box for log grids.
 This is because as the wavenumbers follow exponential progressions :math:`k\sim\lambda^n`, and thus the viscosity term :math:`-k^2 u` takes very large values, making the equations extremely stiff.
 
-Therefore, we need solvers that can handle veru stiff (constant) linear terms.
+Therefore, we need solvers that can handle very stiff (constant) linear terms.
 
 Available solvers
 #################
