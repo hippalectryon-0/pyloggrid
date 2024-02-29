@@ -34,8 +34,6 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.todo",
     # 'sphinx.ext.autosectionlabel',
-    "IPython.sphinxext.ipython_console_highlighting",
-    "IPython.sphinxext.ipython_directive",
     "myst_parser",
     "autoapi.extension",
 ]
