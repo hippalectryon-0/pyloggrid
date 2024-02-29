@@ -5,9 +5,9 @@ build:
     tools:
       python: "3.11"
     jobs:
+      post_create_environment:
+        - pip install poetry
       post_install:
-        - cd log-grid && pip install poetry
-        - cd log-grid && poetry config virtualenvs.create false
-        - cd log-grid && poetry install --with=docs
+        - cd log-grid && VIRTUAL_ENV=$READTHEDOCS_VIRTUALENV_PATH poetry install --with=docs
 sphinx:
   configuration: log-grid/docs/conf.py
