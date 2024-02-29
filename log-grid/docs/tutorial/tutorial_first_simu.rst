@@ -8,6 +8,19 @@ Unlike other big frameworks, users don't provide a "simulation file" composed on
 
 -------------------
 
+What we're simulating
+#####################
+
+Log-lattices operate in an exponentially decimated grid in Fourier space. By design, the current version is therefore limited to periodic boundary/initial conditions, although there are ongoing efforts to alleviate this constraint.
+
+Due to their sparsity, Log-lattices can simulate very wide range of scales, spanning lots of orders of magnitude, down to the Kolmogorov scale. This enables us to perform geophysical simulations without parameterizing the dissipation.
+
+Log-lattices are intrinsically limited to equations that write (in Fourier space) as linear terms and convolutions (i.e. it can't handle third order nonlinear terms). Fortunately, that already covers a very vast array of equations. **Pyloggrid is a general-purpose academic equation solver**, not an industry CFD solver like OpenFOAM.
+
+In the example below, we simulate 3D Navier-Stokes with given initial conditions and forcing.
+
+----
+
 To get started, let's look at the examples in the ``Simulations`` folder of the source (available on `Github <https://github.com/hippalectryon-0/pyloggrid/tree/main/log-grid>`_ ). Copy it and navigate inside:
 
 .. code-block:: bash

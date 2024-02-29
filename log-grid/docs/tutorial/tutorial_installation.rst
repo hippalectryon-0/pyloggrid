@@ -44,7 +44,7 @@ The easiest way is to simply install the package via ``pip``:
 Manual installation (from source)
 *********************************
 
-.. note:: For the Gitlab version (see :doc:`../documentation/doc_github_gitlab`), replace ``git@github.com:hippalectryon-0/pyloggrid.git`` by ``https://drf-gitlab.cea.fr/amaury.barral/log-grid.git`` and ``cd pyloggrid/log-grid`` by ``cd log-grid``.
+.. note:: For the Gitlab version (see :doc:`../documentation/doc_github_gitlab`), replace ``https://github.com/hippalectryon-0/pyloggrid.git`` by ``https://drf-gitlab.cea.fr/amaury.barral/log-grid.git`` and ``cd pyloggrid/log-grid`` by ``cd log-grid``.
 
 The ``pip`` install installs the package in `site-packages`. The source installation installs the package locally, which is useful to make modifications to the source code.
 If you want to install from source to ``site-packages`` after changing the code (such that you can ``import pyloggrid`` from anywhere in your virtual environment), run ``poetry install`` after the instructions below.
@@ -66,7 +66,7 @@ Clone the repository:
 
 .. code-block:: bash
 
-   git clone git@github.com:hippalectryon-0/pyloggrid.git
+   git clone https://github.com/hippalectryon-0/pyloggrid.git
    cd pyloggrid/log-grid
 
 Run the install script:
@@ -88,7 +88,7 @@ Clone the repository:
 
 .. code-block:: bash
 
-   git clone git@github.com:hippalectryon-0/pyloggrid.git
+   git clone https://github.com/hippalectryon-0/pyloggrid.git
    cd pyloggrid/log-grid
 
 Run the install script:
