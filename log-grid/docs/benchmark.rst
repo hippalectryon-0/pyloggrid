@@ -10,11 +10,11 @@ Latest benchmark
 Parallel benchmark
 ******************
 
-.. image:: static/img/benchmark/benchmarking_parallel.png
+.. image:: /static//img/benchmark/benchmarking_parallel.png
   :alt: <Parallel benchmark image>
 
 Vs grid size
 ************
 
-.. image:: static/img/benchmark/benchmarking_anyparam.png
+.. image:: /static/img/benchmark/benchmarking_anyparam.png
   :alt: <Benchmark vs grid size image>

@@ -1,9 +1,8 @@
-########
-Tutorial
-########
+#########
+Tutorials
+#########
 
 .. toctree::
-    tutorial_installation
-    tutorial_first_simu
-    tutorial_analyzing_output
+    tuto_basic/tutorial_basic
+    tuto_HRB/tutorial_HRB
     tutorial_going_further

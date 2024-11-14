@@ -30,21 +30,21 @@ The easiest way is to simply install the package via ``pip``:
                 choco install make
 
     - Linux:
-        Ensure you have ``clang`` and the necessary build tools installed. You can use the following commands to install them on Ubuntu:
+        Ensure you have ``clang`` and the necessary build tools installed, as well as `libomp-dev`. You can use the following commands to install them on Ubuntu:
 
             .. code-block:: bash
 
-                sudo apt update && sudo apt install clang build-essential
+                sudo apt update && sudo apt install clang build-essential libomp-dev
 
 
 .. warning:: The Windows version is significantly less optimized than the Linux version, and does not support multithreading.
 
-.. _Manual installation:
+.. _manual installation:
 
 Manual installation (from source)
 *********************************
 
-.. note:: For the Gitlab version (see :doc:`../documentation/doc_github_gitlab`), replace ``https://github.com/hippalectryon-0/pyloggrid.git`` by ``https://drf-gitlab.cea.fr/amaury.barral/log-grid.git`` and ``cd pyloggrid/log-grid`` by ``cd log-grid``.
+.. note:: For the Gitlab version (see :doc:`/documentation/doc_github_gitlab`), replace ``https://github.com/hippalectryon-0/pyloggrid.git`` by ``https://drf-gitlab.cea.fr/amaury.barral/log-grid.git`` and ``cd pyloggrid/log-grid`` by ``cd log-grid``.
 
 The ``pip`` install installs the package in `site-packages`. The source installation installs the package locally, which is useful to make modifications to the source code.
 If you want to install from source to ``site-packages`` after changing the code (such that you can ``import pyloggrid`` from anywhere in your virtual environment), run ``poetry install`` after the instructions below.

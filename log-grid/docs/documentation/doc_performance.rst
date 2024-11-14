@@ -5,7 +5,7 @@ Optimizing performance
 Performance = convolutions
 ##########################
 
-Let's run the simulation in :doc:`../tutorial/tutorial_first_simu` with ``end_simulation = {"ode_step": 100}``.
+Let's run the simulation in :doc:`/tutorial/tuto_basic/tutorial_first_simu` with ``end_simulation = {"ode_step": 100}``.
 Once the simulation finishes, it output some information such as :class:`TimeTracker <pyloggrid.Libs.misc.TimeTracker>` data:
 
 .. code-block:: bash
@@ -60,7 +60,7 @@ Each time, the flags are ordered by increasing mean time.
 
 In this example, we see that gcc-13 (without openmp) is significantly slower than clang-15 (with openmp), and that among the flags tested, ``march-native`` has the greatest impact.
 
-.. image:: ../static/img/benchmark/benchmarking_flags.png
+.. image:: /static/img/benchmark/benchmarking_flags.png
   :alt: <Compile flags benchmark image>
 
 By iteratively testing flags from a list and adding the fastest until new flags are all worse or equal to the baseline, we can construct a good list of somewhat optimized flags.
@@ -84,7 +84,7 @@ This script benchmarks the convolution as a function of the number of threads an
 
 The benchmark outputs this kind of graph:
 
-.. image:: ../static/img/benchmark/benchmarking_parallel.png
+.. image:: /static/img/benchmark/benchmarking_parallel.png
     :alt: <Parallel benchmark image>
 
 benchmarking_anyparam.py
@@ -106,5 +106,5 @@ Finally, ``do_cycle``, perform the elementary benchmarked operations.
 
 The benchmark outputs this kind of graph:
 
-.. image:: ../static/img/benchmark/benchmarking_anyparam.png
+.. image:: /static/img/benchmark/benchmarking_anyparam.png
     :alt: <Grid size benchmark image>

@@ -15,7 +15,7 @@ Importing :mod:`~pyloggrid.Libs.plotLib` automatically runs :func:`~pyloggrid.Li
 
 The default style, shown below, cycles through colors and line/marker styles. The color palette is colorblind-friendly and perceptually uniform.
 
-.. image:: ../static/img/plots/format.png
+.. image:: /static/img/plots/format.png
     :alt: <Default format image>
 
 Common functions
@@ -52,27 +52,27 @@ PyLogGrid provides a number of helpers to produce interactive graphs depending o
 
 :func:`~pyloggrid.Libs.plotLib.interactive_spectrum` plots on the left side spectra (log-log) and on the right side time-dependent scalars (lin-lin).
 
-.. image:: ../static/img/plots/interactive_spectrum.png
+.. image:: /static/img/plots/interactive_spectrum.png
     :alt: <Interactive spectrum image>
 
 :func:`~pyloggrid.Libs.plotLib.interactive_3D_logplot_by_z` makes a 3D plot of 2D aggregates of a 3D field. It either plots only a given z-plane, or all z-planes together. The vertical coordinate shows the amplitude of the field. If we plot a single z-plane, the color shows the phase of the field. If all z-planes are aggregated, the color shows the highlighted z-plane.
 
-.. image:: ../static/img/plots/interactive_3D_logplot_by_z.png
+.. image:: /static/img/plots/interactive_3D_logplot_by_z.png
     :alt: <Interactive 3D logplot by z image>
 
 :func:`~pyloggrid.Libs.plotLib.interactive_3D_logplot_positive` only works on the ``k_x,k_y,k_z>0`` quadrant, and can single out points whose module is greater than a threshold.
 
-.. image:: ../static/img/plots/interactive_3D_logplot_positive.png
+.. image:: /static/img/plots/interactive_3D_logplot_positive.png
     :alt: <Interactive 3D logplot positive image>
 
 :func:`~pyloggrid.Libs.plotLib.interactive_3D_logplot_positive` shows diagonal slices of a 3D field, with a threshold.
 
-.. image:: ../static/img/plots/interactive_grid_3Dslice.png
+.. image:: /static/img/plots/interactive_grid_3Dslice.png
     :alt: <Interactive grid 3Dslice image>
 
 :func:`~pyloggrid.Libs.plotLib.interactive_grid_imshow` shows a 2D interactive :func:`~matplotlib.pyplot.imshow`.
 
-.. image:: ../static/img/plots/interactive_grid_imshow.png
+.. image:: /static/img/plots/interactive_grid_imshow.png
     :alt: <Interactive grid 3Dslice image>
 
 
