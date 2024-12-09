@@ -34,13 +34,13 @@ _The authors contributed to this work in unequal proportions, with Amaury Barral
 
 # Summary
 
-PyLogGrid is a framework to perform and analyze log-lattice simulations, as introduced by @martins_fluid_2019.
+PyLogGrid is a framework for performing and analyzing log-lattice simulations, as introduced by @martins_fluid_2019.
 
-Accurate simulations of fluid dynamics, such as Direct Numerical Simulations (DNS), become prohibitevely costly as we increase the inertial range. This is in particular a problem in simulating either the dynamics of singularities, or that of geophysical and astrophysical systems. Sparse simulation models, such as shell models [@gloaguen85; @biferale03] or REWA [@grossmann96], offer a cost-effective way to simulate such equations, by only considering a subset of the degrees of freedom, but at the cost of physical fidelity. Log-lattices [@martins_fluid_2019; @martins_fluid_2022] are a sparse model which conserves symmetries of the mathematical operators in a better way than previous methods.
+Accurate fluid dynamics simulations, such as Direct Numerical Simulations (DNS), become prohibitively costly as we increase the inertial range. This is, in particular, a problem in simulating the dynamics of singularities or geophysical and astrophysical systems. Sparse simulation models, such as shell models [@gloaguen85; @biferale03] or REWA [@grossmann96], offer a cost-effective way to simulate such equations by only considering a subset of the degrees of freedom, but at the cost of physical fidelity. Log-lattices [@martins_fluid_2019; @martins_fluid_2022] are a sparse model which conserves symmetries of the mathematical operators better than previous methods.
 
 # Statement of need
 
-A minimal Matlab framework by @campolina2020loglatt already exists, but it relies on proprietary software, and its capabilities are limited. PyLogGrid was designed to offer a solid, open-source, and extensive framework to perform log-lattice simulations. It enables both simulation, analysis and visualisation of log-lattice data. The choice of Python+C offers both great flexibility and speed. PyLogGrid offers sigificantly more options than @campolina2020loglatt, including several solvers, support for $k_i=0$ modes, failsafe simulations, optimized save formats, tests and documentation, etc.
+A minimal Matlab framework by @campolina2020loglatt already exists, but it relies on proprietary software, and its capabilities are limited. PyLogGrid was designed to offer a solid, open-source, and extensive framework for log-lattice simulations. It enables both simulation, analysis and visualisation of log-lattice data. The choice of Python+C offers both great flexibility and speed. PyLogGrid offers significantly more options than @campolina2020loglatt, including several solvers, support for $k_i=0$ modes, failsafe simulations, optimized save formats, tests and documentation, etc.
 
 PyLogGrid has been used in a number of publications [@barral2023asymptotic; @costa2023reversible; @atmos14111690].
 
