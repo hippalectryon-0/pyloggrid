@@ -8,7 +8,7 @@ tags:
 authors:
     - name: Amaury Barral
       orcid: 0000-0002-5857-1290
-      affiliation: 1
+      affiliation: 3
     - name: Bérengère Dubrulle
       orcid: 0000-0002-3644-723X
       affiliation: 2
@@ -26,6 +26,7 @@ affiliations:
    index: 1
  - name: Université Paris-Saclay, CEA, CNRS, SPEC, 91191 Gif-sur-Yvette, France
    index: 2
+ - name: LMD-IPSL, Sorbonne-Universités, 75005 Paris, France
 date: 11 November 2023
 bibliography: paper.bib
 ---
