@@ -8,25 +8,28 @@ tags:
 authors:
     - name: Amaury Barral
       orcid: 0000-0002-5857-1290
-      affiliation: 3
+      affiliation: 1
     - name: Bérengère Dubrulle
       orcid: 0000-0002-3644-723X
       affiliation: 2
       corresponding: true
     - name: Guillaume Costa
       orcid: 0009-0008-9913-459X
-      affiliation: 1
+      affiliation: 3
     - name: Quentin Pikeroen
       orcid: 0009-0006-0345-6339
-      affiliation: 1
+      affiliation: 3
     - name: Adrien Lopez
-      affiliation: 1
+      affiliation: 3
 affiliations:
- - name: Université Paris-Saclay, CEA, SPEC, 91191 Gif-sur-Yvette, France
-   index: 1
- - name: Université Paris-Saclay, CEA, CNRS, SPEC, 91191 Gif-sur-Yvette, France
-   index: 2
- - name: LMD-IPSL, Sorbonne-Universités, 75005 Paris, France
+- name: LMD-IPSL, Sorbonne-Universités, 75005 Paris, France
+  index: 1
+- name: Université Paris-Saclay, CEA, CNRS, SPEC, 91191 Gif-sur-Yvette, France
+  index: 2
+- name: Université Paris-Saclay, CEA, SPEC, 91191 Gif-sur-Yvette, France
+  index: 3
+
+
 date: 11 November 2023
 bibliography: paper.bib
 ---
