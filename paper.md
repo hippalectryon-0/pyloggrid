@@ -13,6 +13,7 @@ authors:
       orcid: 0000-0002-3644-723X
       affiliation: 2
       corresponding: true
+      email: berengere.dubrulle@cea.fr
     - name: Guillaume Costa
       orcid: 0009-0008-9913-459X
       affiliation: 3
@@ -20,6 +21,7 @@ authors:
       orcid: 0009-0006-0345-6339
       affiliation: 3
     - name: Adrien Lopez
+      orcid: 0009-0006-7893-0058
       affiliation: 3
 affiliations:
 - name: LMD-IPSL, Sorbonne-Universités, 75005 Paris, France
