@@ -52,7 +52,7 @@ PyLogGrid has been used in a number of publications [@barral2023asymptotic; @cos
 
 # Basic features
 
-*This corresponds to version 2.2.1*.
+*This corresponds to version 2.3.2*.
 
 The basics of PyLogGrid consists in a `Solver` class to simulate equations on log-lattices, and a `DataExplorer` class to visualize and analyze resulting data.
 
