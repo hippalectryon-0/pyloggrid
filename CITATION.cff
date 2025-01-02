@@ -1,0 +1,59 @@
+cff-version: "1.2.0"
+authors:
+- family-names: Barral
+  given-names: Amaury
+  orcid: "https://orcid.org/0000-0002-5857-1290"
+- email: berengere.dubrulle@cea.fr
+  family-names: Dubrulle
+  given-names: Bérengère
+  orcid: "https://orcid.org/0000-0002-3644-723X"
+- family-names: Costa
+  given-names: Guillaume
+  orcid: "https://orcid.org/0009-0008-9913-459X"
+- family-names: Pikeroen
+  given-names: Quentin
+  orcid: "https://orcid.org/0009-0006-0345-6339"
+- family-names: Lopez
+  given-names: Adrien
+  orcid: "https://orcid.org/0009-0006-7893-0058"
+contact:
+- email: berengere.dubrulle@cea.fr
+  family-names: Dubrulle
+  given-names: Bérengère
+  orcid: "https://orcid.org/0000-0002-3644-723X"
+doi: 10.5281/zenodo.14356262
+message: If you use this software, please cite our article in the
+  Journal of Open Source Software.
+preferred-citation:
+  authors:
+  - family-names: Barral
+    given-names: Amaury
+    orcid: "https://orcid.org/0000-0002-5857-1290"
+  - email: berengere.dubrulle@cea.fr
+    family-names: Dubrulle
+    given-names: Bérengère
+    orcid: "https://orcid.org/0000-0002-3644-723X"
+  - family-names: Costa
+    given-names: Guillaume
+    orcid: "https://orcid.org/0009-0008-9913-459X"
+  - family-names: Pikeroen
+    given-names: Quentin
+    orcid: "https://orcid.org/0009-0006-0345-6339"
+  - family-names: Lopez
+    given-names: Adrien
+    orcid: "https://orcid.org/0009-0006-7893-0058"
+  date-published: 2024-12-31
+  doi: 10.21105/joss.06439
+  issn: 2475-9066
+  issue: 104
+  journal: Journal of Open Source Software
+  publisher:
+    name: Open Journals
+  start: 6439
+  title: "PyLogGrid: A Python package for fluid dynamics on logarithmic
+    lattices"
+  type: article
+  url: "https://joss.theoj.org/papers/10.21105/joss.06439"
+  volume: 9
+title: "PyLogGrid: A Python package for fluid dynamics on logarithmic
+  lattices"
