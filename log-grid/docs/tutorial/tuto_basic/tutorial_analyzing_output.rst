@@ -89,7 +89,7 @@ When you run the script
 
 you should see a graph like this
 
-.. image:: ../static/img/tutorial/tutorial_graph.png
+.. image:: /static/img/tutorial/tutorial_graph.png
   :alt: <image: Simulation treatment graph>
 
 Arbitrary functions

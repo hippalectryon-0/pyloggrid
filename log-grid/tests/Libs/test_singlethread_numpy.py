@@ -1,4 +1,5 @@
 """utests for singlethread_numpy.py"""
+
 from pyloggrid.Libs.singlethread_numpy import np
 
 np.array(0)

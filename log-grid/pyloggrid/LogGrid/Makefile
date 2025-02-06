@@ -1,7 +1,7 @@
 #CC=gcc
 CC=clang
 CFLAGS=-c -g -fpic -Wall -Wextra -O3 -march=native -ffast-math -fopenmp -DUSE_OMP
-LDFLAGS=-shared -fopenmp
+LDFLAGS=-shared -fopenmp -latomic
 SOURCES=convolver_c.c
 OBJECTS=$(SOURCES:.c=.o)
 TARGET=convolver_c.so

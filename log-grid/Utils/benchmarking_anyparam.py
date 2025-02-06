@@ -2,6 +2,7 @@
 Benchmark performance of (3)D simulation vs. arbitrary parameter, incl. # of threads
 Plot results
 """
+
 import os
 import sys
 
@@ -53,7 +54,7 @@ D = 3
 k0 = False
 x_name = "Grid size"
 x_title = rf"Time for one convolution vs grid size, D={D}, k0={k0} for $\lambda=\phi$"
-N_cycles = 300  # How many runs to average
+N_cycles = 30  # How many runs to average
 
 # Do the benchmark
 x_times = []

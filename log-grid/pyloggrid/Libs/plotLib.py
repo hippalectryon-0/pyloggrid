@@ -1,4 +1,5 @@
 """Utilities for fast plotting"""
+
 from __future__ import annotations
 
 from pyloggrid.Libs.misc import rightpad_array_2D
@@ -79,9 +80,50 @@ def initFormat(size: float = 1, txtsize: float = None, rcParams: dict = None) ->
         "legend.fancybox": False,
         "axes.prop_cycle": force_add_cycler(
             [
-                cycler("color", ["#006BA4", "#FF800E", "#ABABAB", "#595959", "#5F9ED1", "#C85200", "#898989", "#A2C8EC", "#FFBC79", "#CFCFCF"]),
+                cycler(
+                    "color",
+                    [
+                        "#006BA4",
+                        "#FF800E",
+                        "#ABABAB",
+                        "#595959",
+                        "#5F9ED1",
+                        "#C85200",
+                        "#898989",
+                        "#A2C8EC",
+                        "#FFBC79",
+                        "#CFCFCF",
+                    ],
+                ),
                 cycler("linestyle", ["-", "--", "-.", ":"]),
-                cycler("marker", ["o", "d", "v", "^", "<", ">", "1", "2", "3", "4", "8", "s", "p", "P", "*", "h", "H", "+", "x", "X", "D", "|", "_"]),
+                cycler(
+                    "marker",
+                    [
+                        "o",
+                        "d",
+                        "v",
+                        "^",
+                        "<",
+                        ">",
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "8",
+                        "s",
+                        "p",
+                        "P",
+                        "*",
+                        "h",
+                        "H",
+                        "+",
+                        "x",
+                        "X",
+                        "D",
+                        "|",
+                        "_",
+                    ],
+                ),
             ]
         ),
         "image.cmap": "cividis",
@@ -260,7 +302,15 @@ def interactive_spectrum(ts: np.ndarray, ks: np.ndarray, spectra: dict[str, np.n
 
     # Sliders & Buttons
     fig.subplots_adjust(bottom=0.2)
-    n_slider = Slider(ax=fig.add_axes((0.25, 0.1, 0.65, 0.03)), label="Step", valfmt="%d", valmin=1, valmax=ts.size, valinit=1, valstep=1)
+    n_slider = Slider(
+        ax=fig.add_axes((0.25, 0.1, 0.65, 0.03)),
+        label="Step",
+        valfmt="%d",
+        valmin=1,
+        valmax=ts.size,
+        valinit=1,
+        valstep=1,
+    )
     n_slider.on_changed(update_graph)
 
     spectrum_lines = {}
@@ -393,7 +443,16 @@ def interactive_3D_logplot_by_z(X: np.ndarray, Y: np.ndarray, V: np.ndarray, Z: 
     z_slider, btn_toggle_z = None, None
     if Z is not None:
         z_slider_ax = fig.add_axes((0.1, 0.25, 0.0225, 0.63))
-        z_slider = Slider(ax=z_slider_ax, label="n_z", valfmt="%d", valmin=0, valmax=X.shape[2] - 1, valinit=X.shape[2] // 2, valstep=1, orientation="vertical")
+        z_slider = Slider(
+            ax=z_slider_ax,
+            label="n_z",
+            valfmt="%d",
+            valmin=0,
+            valmax=X.shape[2] - 1,
+            valinit=X.shape[2] // 2,
+            valstep=1,
+            orientation="vertical",
+        )
         z_slider_text = z_slider_ax.text(0.5, 0.5, "")
         z_slider.on_changed(update_graph)
 
@@ -449,7 +508,15 @@ def interactive_grid_imshow(
     ## Sliders & Buttons
     fig.subplots_adjust(bottom=0.2)
     vmin, vmax, vstep, slidertitle, vformat = slider_params
-    n_slider = Slider(ax=fig.add_axes([0.25, 0.1, 0.65, 0.03]), label=slidertitle, valfmt=vformat, valmin=vmin, valmax=vmax, valinit=vmin, valstep=vstep)
+    n_slider = Slider(
+        ax=fig.add_axes([0.25, 0.1, 0.65, 0.03]),
+        label=slidertitle,
+        valfmt=vformat,
+        valmin=vmin,
+        valmax=vmax,
+        valinit=vmin,
+        valstep=vstep,
+    )
     n_slider.on_changed(update_graph)
 
     update_graph()
@@ -505,7 +572,15 @@ def interactive_grid_3Dslice(
     ## Sliders & Buttons
     fig.subplots_adjust(bottom=0.2)
     vmin, vmax, vstep, slidertitle, vformat = slider_params
-    n_slider = Slider(ax=fig.add_axes((0.25, 0.1, 0.65, 0.03)), label=slidertitle, valfmt=vformat, valmin=vmin, valmax=vmax, valinit=vmin, valstep=vstep)
+    n_slider = Slider(
+        ax=fig.add_axes((0.25, 0.1, 0.65, 0.03)),
+        label=slidertitle,
+        valfmt=vformat,
+        valmin=vmin,
+        valmax=vmax,
+        valinit=vmin,
+        valstep=vstep,
+    )
     n_slider.on_changed(update_graph)
 
     update_graph()
@@ -558,7 +633,15 @@ def interactive_3D_logplot_positive(
     ## Sliders & Buttons
     fig.subplots_adjust(bottom=0.2)
     vmin, vmax, vstep, slidertitle, vformat = slider_params
-    n_slider = Slider(ax=fig.add_axes((0.25, 0.1, 0.65, 0.03)), label=slidertitle, valfmt=vformat, valmin=vmin, valmax=vmax, valinit=vmin, valstep=vstep)
+    n_slider = Slider(
+        ax=fig.add_axes((0.25, 0.1, 0.65, 0.03)),
+        label=slidertitle,
+        valfmt=vformat,
+        valmin=vmin,
+        valmax=vmax,
+        valinit=vmin,
+        valstep=vstep,
+    )
     n_slider.on_changed(update_graph)
 
     update_graph()
@@ -568,7 +651,10 @@ def interactive_3D_logplot_positive(
 
 # Other
 def rand_cmap(
-    nlabels: int, type_: typing.Literal["bright", "soft"] = "bright", first_color_black: bool = True, last_color_black: bool = False
+    nlabels: int,
+    type_: typing.Literal["bright", "soft"] = "bright",
+    first_color_black: bool = True,
+    last_color_black: bool = False,
 ) -> "LinearSegmentedColormap":
     """Creates a random colormap to be used together with matplotlib. Useful for segmentation tasks
 
@@ -609,7 +695,12 @@ def rand_cmap(
         low = 0.6
         high = 0.95
         randRGBcolors: list = [
-            (np.random.uniform(low=low, high=high), np.random.uniform(low=low, high=high), np.random.uniform(low=low, high=high)) for _ in range(nlabels)
+            (
+                np.random.uniform(low=low, high=high),
+                np.random.uniform(low=low, high=high),
+                np.random.uniform(low=low, high=high),
+            )
+            for _ in range(nlabels)
         ]
 
         if first_color_black:

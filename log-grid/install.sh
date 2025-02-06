@@ -6,30 +6,17 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     exit 1
 fi
 
-sudo apt-get update && sudo apt-get install -y software-properties-common && sudo add-apt-repository -y ppa:deadsnakes/ppa && sudo apt-get update
-
-python_v="3.11"
-venv=".venv"
-
-# python
-if [ "$1" != "-s" ]; then
-  sudo apt-get -y install python$python_v python$python_v-dev python$python_v-venv python3-pip
-  curl -sS https://bootstrap.pypa.io/get-pip.py | python$python_v
-  python$python_v -m pip install poetry
+# Install uv if necessary
+if ! which uv &> /dev/null; then
+  wget -qO- https://astral.sh/uv/install.sh | sh
 fi
 
-# requirements
-python$python_v -m poetry config virtualenvs.in-project true
-python$python_v -m virtualenv $venv
-. .venv/bin/activate
-poetry install --with=docs,examples
-pip uninstall pyloggrid -y  # If you're installing from here you probably want to work with the local source and not the one in site-packages
-rm -rf build
-pre-commit install
-
-# convolver
-sudo apt install -y build-essential clang-15 libomp-15-dev
+# ensure clang & omp are available
+sudo apt update && sudo apt install -y build-essential clang-15 libomp-15-dev
 sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-15 1
-cd pyloggrid/LogGrid || exit
-make
-cd ../../
+
+uv sync --group docs --group examples
+uv build
+source .venv/bin/activate
+rm -rf dist
+pre-commit install

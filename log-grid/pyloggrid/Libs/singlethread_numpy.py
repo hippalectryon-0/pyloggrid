@@ -16,6 +16,7 @@ Example:
 
         from pyloggrid.Libs.singlethread_numpy import np
 """
+
 import os
 import sys
 

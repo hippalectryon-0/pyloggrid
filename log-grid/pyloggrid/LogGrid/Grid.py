@@ -1,6 +1,7 @@
 """
 Class that directly handles the log grid & related maths
 """
+
 import typing
 
 if typing.TYPE_CHECKING:  # for Sphinx
@@ -49,7 +50,15 @@ def _setup_convolver_c(convolver_c) -> None:
     convolver_c.convolve.argtypes = args
     convolver_c.convolve_omp.argtypes = args
 
-    args = [ui32_1d_type, ct.c_uint32, ct.POINTER(ct.c_void_p), ct.POINTER(ct.c_void_p), ct.c_uint32, ct.c_short, complex_1d_type]
+    args = [
+        ui32_1d_type,
+        ct.c_uint32,
+        ct.POINTER(ct.c_void_p),
+        ct.POINTER(ct.c_void_p),
+        ct.c_uint32,
+        ct.c_short,
+        complex_1d_type,
+    ]
     convolver_c.convolve_list_omp.argtypes = args
     convolver_c.convolve_list_batch_V2.argtypes = args
     convolver_c.convolve_list_batch_V3.argtypes = args
@@ -239,7 +248,13 @@ class Grid:
             N_points: the new size
         """
         grid = Grid(
-            D=self.D, N_points=N_points, fields_name=self.fields_names, l_params=self.l_params, n_threads=self.maths.n_threads, k_min=self.k_min, k0=self.k0
+            D=self.D,
+            N_points=N_points,
+            fields_name=self.fields_names,
+            l_params=self.l_params,
+            n_threads=self.maths.n_threads,
+            k_min=self.k_min,
+            k0=self.k0,
         )
         grid.time_tracker = self.time_tracker
         return grid
@@ -278,7 +293,9 @@ class Maths:
 
         self.convolution_kernel = self.generate_convolution_kernel()  # Kernel for convolutions
 
-    def generate_convolution_kernel(self) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    def generate_convolution_kernel(
+        self,
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         """Generate the convolution kernel (who interacts with who) for log grid convolutions
 
         Returns:
@@ -302,9 +319,35 @@ class Maths:
             kernel_signs = [(1, -1), (-1, 1), (1, -1), (-1, 1), (1, 1), (1, 1)]
 
         else:  # plastic
-            kernel_offsets = [(3, 1), (1, 3), (2, -1), (-1, 2), (-3, -2), (-2, -3), (5, 4), (4, 5), (1, -4), (-4, 1), (-5, -1), (-1, -5)]
+            kernel_offsets = [
+                (3, 1),
+                (1, 3),
+                (2, -1),
+                (-1, 2),
+                (-3, -2),
+                (-2, -3),
+                (5, 4),
+                (4, 5),
+                (1, -4),
+                (-4, 1),
+                (-5, -1),
+                (-1, -5),
+            ]
 
-            kernel_signs = [(1, -1), (-1, 1), (1, -1), (-1, 1), (1, 1), (1, 1), (1, -1), (-1, 1), (1, -1), (-1, 1), (1, 1), (1, 1)]
+            kernel_signs = [
+                (1, -1),
+                (-1, 1),
+                (1, -1),
+                (-1, 1),
+                (1, 1),
+                (1, 1),
+                (1, -1),
+                (-1, 1),
+                (1, -1),
+                (-1, 1),
+                (1, 1),
+                (1, 1),
+            ]
 
         # k=0
         i_list = list(range(-self.grid.ks[0].shape[0] + 1, self.grid.ks[0].shape[0]))
@@ -328,7 +371,14 @@ class Maths:
             kernel_offsets += [(0, 0), (0, 0)]
             kernel_signs += [(1, 0), (0, 1)]
         # convert for Cython
-        kernel_offsets, kernel_signs, kernel_offsets_k0_ax0, kernel_signs_k0_ax0, kernel_offsets_k0_ax1, kernel_signs_k0_ax1 = (
+        (
+            kernel_offsets,
+            kernel_signs,
+            kernel_offsets_k0_ax0,
+            kernel_signs_k0_ax0,
+            kernel_offsets_k0_ax1,
+            kernel_signs_k0_ax1,
+        ) = (
             np.array(kernel_offsets, dtype=np.short),
             np.array(kernel_signs, dtype=np.short),
             np.array(kernel_offsets_k0_ax0, dtype=np.short),
@@ -340,7 +390,12 @@ class Maths:
         if self.grid.D == 1:
             # noinspection PyTypeChecker
             kernel = conv_kernel_generator.compute_interaction_kernel_1D(
-                kernel_offsets, kernel_signs, kernel_offsets_k0_ax0, kernel_signs_k0_ax0, self.grid.k0, self.grid.ks[0].shape[0]
+                kernel_offsets,
+                kernel_signs,
+                kernel_offsets_k0_ax0,
+                kernel_signs_k0_ax0,
+                self.grid.k0,
+                self.grid.ks[0].shape[0],
             )
         elif self.grid.D == 2:
             # noinspection PyTypeChecker
@@ -373,7 +428,13 @@ class Maths:
             raise ValueError
         # noinspection PyUnresolvedReferences
         logger.info(f"Convolution coeffs generated - approx {kernel.shape[0]} triads, kernel size approx {bytes2human(kernel.size * kernel.itemsize)}")
-        Maths.cached_conv_kernel = {"N": self.grid.N_points, "l_params": self.grid.l_params, "D": self.grid.D, "k0": self.grid.k0, "kernel": kernel}
+        Maths.cached_conv_kernel = {
+            "N": self.grid.N_points,
+            "l_params": self.grid.l_params,
+            "D": self.grid.D,
+            "k0": self.grid.k0,
+            "kernel": kernel,
+        }
         # noinspection PyTypeChecker
         return kernel
 
@@ -542,7 +603,7 @@ class Maths:
     @property
     def laplacian(self) -> np.ndarray:
         """laplacian"""
-        return -self.grid.ks_modulus**2
+        return -(self.grid.ks_modulus**2)
 
     @staticmethod
     def inv(f: ArrayLike) -> np.ndarray:

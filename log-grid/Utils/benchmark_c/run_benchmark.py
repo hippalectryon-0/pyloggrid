@@ -3,6 +3,7 @@ run a benchmark for current build
 
 Ran as ``run_benchmark.py flags N_cycles N``
 """
+
 import sys
 import time
 from pathlib import Path

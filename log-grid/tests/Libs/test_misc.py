@@ -1,4 +1,5 @@
 """utests for misc.py"""
+
 import time
 
 import numpy as np

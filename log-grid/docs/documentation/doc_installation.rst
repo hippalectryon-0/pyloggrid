@@ -2,4 +2,4 @@
 Installation
 ************
 
-See :doc:`../tutorial/tutorial_installation`
+See :doc:`../tutorial/tuto_basic/tutorial_installation`

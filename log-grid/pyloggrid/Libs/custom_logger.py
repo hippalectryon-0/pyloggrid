@@ -1,4 +1,5 @@
 """Create a custom logger. Used to replace all print calls. Outputs to log file."""
+
 import logging
 import sys
 

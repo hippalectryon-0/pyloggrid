@@ -1,4 +1,5 @@
 """utests for IOLib.py"""
+
 import os.path
 
 from pyloggrid.Libs.singlethread_numpy import np
@@ -95,7 +96,14 @@ def test_save_step(tmp_path):
         N_points = 20
         k0 = False
         k_min = 55.5
-        grid = Grid(D=D, l_params={"a": None, "b": None, "plastic": False}, N_points=N_points, k_min=k_min, fields_name=["f1", "f2"], k0=k0)
+        grid = Grid(
+            D=D,
+            l_params={"a": None, "b": None, "plastic": False},
+            N_points=N_points,
+            k_min=k_min,
+            fields_name=["f1", "f2"],
+            k0=k0,
+        )
         grid.fields["f1"] = randcomplex_like(grid.fields["f1"])
         grid.fields["f2"] = randcomplex_like(grid.fields["f1"])
         elapsed_time = 15645.2
@@ -137,7 +145,14 @@ def test_load_step(tmp_path):
         N_points = 21
         k_min = 55.52
         fields_name = ["f1", "f2"]
-        grid = Grid(D=D, l_params={"a": 1, "b": 2, "plastic": False}, N_points=N_points, k_min=k_min, fields_name=fields_name, k0=k0)
+        grid = Grid(
+            D=D,
+            l_params={"a": 1, "b": 2, "plastic": False},
+            N_points=N_points,
+            k_min=k_min,
+            fields_name=fields_name,
+            k0=k0,
+        )
         grid.fields["f1"] = randcomplex_like(grid.fields["f1"])
         grid.fields["f2"] = randcomplex_like(grid.fields["f1"])
         elapsed_time = 15645.2

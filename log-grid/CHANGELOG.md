@@ -5,6 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0]
+
+### Changed
+
+- Add support for python 3.12. & 3.13, change default python to 3.13, update libraries
+
+## [2.4.0]
+
+### Changed
+
+- Change structure from poetry to uv
+- Replace black, isort, fkale8, etc. by ruff
+
+## [2.3.5]
+
+### Fixed
+
+- Fixed critical race condition which caused incorrect convolution results when using multiple OMP threads
+- Fix poetry build
+
+## [2.3.4]
+
+### Added
+
+- Add HRB tutorial in docs
+
+## [2.3.3]
+
+### Fixed
+
+- Fix github repo link in docs
+- Improve tutorial docs
+
+## [2.3.2]
+
+### Fixed
+
+- Fix typo
+
 ## [2.3.1]
 
 ### Fixed

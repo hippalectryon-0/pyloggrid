@@ -3,7 +3,7 @@ import tomllib
 from datetime import datetime
 
 with open("../pyproject.toml", "rb") as f:
-    toml_data = tomllib.load(f)["tool"]["poetry"]
+    toml_data = tomllib.load(f)["project"]
 
 # Configuration file for the Sphinx documentation builder.
 #
@@ -18,7 +18,7 @@ project = toml_data["name"]
 # noinspection PyShadowingBuiltins
 copyright = f"2019-{datetime.now().year}, pyloggrid Developers"
 # noinspection PyUnresolvedReferences
-author = ", ".join(toml_data["authors"])
+author = ", ".join(e["name"] for e in toml_data["authors"])
 # noinspection PyUnresolvedReferences
 release = toml_data["version"]
 

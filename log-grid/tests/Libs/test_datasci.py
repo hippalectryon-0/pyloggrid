@@ -1,4 +1,5 @@
 """utests for datasci.py"""
+
 from numpy.testing import assert_allclose
 
 from pyloggrid.Libs.singlethread_numpy import np
