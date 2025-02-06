@@ -54,8 +54,10 @@ static always_inline void convolve_inner(const size_t i, const uint32_t *restric
     }
 
     #ifdef _MSC_VER
+        #pragma omp atomic
         arr_out[kernel[i]] = ComplexAddMSVC(arr_out[kernel[i]], x);
     #else
+        #pragma omp atomic
         arr_out[kernel[i]] += x;
     #endif
 }
@@ -123,8 +125,10 @@ static always_inline void convolve_list_batch_V_inner(const size_t i_batch, cons
 
     for (size_t j=0; j<V; j++) {
         #ifdef _MSC_VER
+            #pragma omp atomic
             arr_out[(i_batch + j) * f_size + kernel[i]] = ComplexAddMSVC(arr_out[(i_batch + j) * f_size + kernel[i]], x[j]);
         #else
+            #pragma omp atomic
             arr_out[(i_batch + j) * f_size + kernel[i]] += x[j];
         #endif
     }

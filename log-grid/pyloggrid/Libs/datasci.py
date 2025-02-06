@@ -1,4 +1,5 @@
 """Libraries for data science"""
+
 import typing
 from typing import Any, Callable, Iterable, Optional
 
@@ -199,4 +200,4 @@ def ragged_array_to_array(data: np.ndarray | list, fill=np.nan) -> np.ndarray:
 
 def logmean(data: np.ndarray, axis=None) -> np.ndarray:
     """Logarithmic mean along an axis, ignoring zero and nan values."""
-    return np.exp(np.nanmean(np.log(clamp_zero(data, np.NaN)), axis=axis))
+    return np.exp(np.nanmean(np.log(clamp_zero(data, np.nan)), axis=axis))

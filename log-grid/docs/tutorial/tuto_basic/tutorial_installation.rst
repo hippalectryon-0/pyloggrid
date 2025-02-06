@@ -47,7 +47,7 @@ Manual installation (from source)
 .. note:: For the Gitlab version (see :doc:`/documentation/doc_github_gitlab`), replace ``https://github.com/hippalectryon-0/pyloggrid.git`` by ``https://drf-gitlab.cea.fr/amaury.barral/log-grid.git`` and ``cd pyloggrid/log-grid`` by ``cd log-grid``.
 
 The ``pip`` install installs the package in `site-packages`. The source installation installs the package locally, which is useful to make modifications to the source code.
-If you want to install from source to ``site-packages`` after changing the code (such that you can ``import pyloggrid`` from anywhere in your virtual environment), run ``poetry install`` after the instructions below.
+If you want to install from source to ``site-packages`` after changing the code (such that you can ``import pyloggrid`` from anywhere in your virtual environment), run ``uv build`` after the instructions below.
 
 .. warning:: If you decide to install from source to ``site-packages``, we recommend changing the name of the local directory in order to make sure you're not importing the *local* version instead of the ``site-packages`` version.
 
@@ -81,6 +81,8 @@ Windows
 =======
 
 .. warning:: The windows installation script may be less stable. Moreover, the windows version does not support multithreading.
+
+.. warning:: The windows version has not been tested with newer releases.
 
 Install `git <https://git-scm.com/download/win>`_.
 

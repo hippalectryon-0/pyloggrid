@@ -1,7 +1,7 @@
 ### Comment for self:
 ### To change on new python version: python_v, dl_url, name in Move-Item and Remove-Item
 
-$python_v = "3.11"
+$python_v = "3.13"  # Do not change if you want it to be automatically installed, the URL is hardcoded for Windows
 $python_cmd = ".\python$( $python_v )/python.exe"
 $venv = ".venv"
 
@@ -48,7 +48,7 @@ Write-Host "Mingw is installed and ready to use"
 ## Install python
 if (-Not(Test-Path -Path "python$python_v") -and $args[0] -ne "-s")
 {
-    $dl_url = "https://github.com/winpython/winpython/releases/download/5.3.20221211/Winpython64-3.11.1.0dotb4.exe"
+    $dl_url = "https://github.com/winpython/winpython/releases/download/11.4.20250119/Winpython64-3.13.1.1dotb2.exe"
 
     "Downloading portable python $python_v for Windows"
     Start-BitsTransfer -Source $dl_url -Destination pythonarchive.exe
@@ -56,8 +56,8 @@ if (-Not(Test-Path -Path "python$python_v") -and $args[0] -ne "-s")
     "Unpacking"
     .\pythonarchive.exe -y | Out-Null
     Remove-Item pythonarchive.exe
-    Move-Item WPy64-31110b4/python-3.11.1.amd64 "python$( $python_v )_"
-    Remove-Item WPy64-31110b4 -Recurse
+    Move-Item WPy64-31311b2/python-3.13.1.amd64 "python$( $python_v )_"
+    Remove-Item WPy64-31311b2 -Recurse
     Move-Item "python$( $python_v )_" "python$python_v"
     "Unpacked"
     "Testing python"

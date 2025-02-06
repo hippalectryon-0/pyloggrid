@@ -1,4 +1,5 @@
 """Solver for the log grids."""
+
 from __future__ import annotations
 
 import typing
@@ -201,7 +202,15 @@ class ViscDopri(_CustIntegrator):
         logger.info(f"Initial step: dt={self.dt}")
 
     def rk_step(
-        self, fun: Callable[[float, np.ndarray], np.ndarray], t: float, y: np.ndarray, h: float, A: np.ndarray, B: np.ndarray, C: np.ndarray, K: np.ndarray
+        self,
+        fun: Callable[[float, np.ndarray], np.ndarray],
+        t: float,
+        y: np.ndarray,
+        h: float,
+        A: np.ndarray,
+        B: np.ndarray,
+        C: np.ndarray,
+        K: np.ndarray,
     ) -> tuple[np.ndarray, np.ndarray]:
         """Perform a single Runge-Kutta step.
         This function computes a prediction of an explicit Runge-Kutta method and
@@ -364,7 +373,14 @@ class ETD4RK(_CustIntegrator):
 
     @staticmethod
     def dopri_step(
-        fun: Callable[[float, np.ndarray], np.ndarray], t: float, y: np.ndarray, h: float, A: np.ndarray, B: np.ndarray, C: np.ndarray, K: np.ndarray
+        fun: Callable[[float, np.ndarray], np.ndarray],
+        t: float,
+        y: np.ndarray,
+        h: float,
+        A: np.ndarray,
+        B: np.ndarray,
+        C: np.ndarray,
+        K: np.ndarray,
     ) -> tuple[np.ndarray, np.ndarray]:
         """Perform a single Runge-Kutta step.
         This function computes a prediction of an explicit Runge-Kutta method and
@@ -496,7 +512,11 @@ class ETD35(_CustIntegrator):
         y = self.y
 
         solver = etd35.ETD35(
-            linop=self.equation_l(t, y), NLfunc=lambda y_: self.equation_nl(t, y_), epsilon=self.rtol, adapt_cutoff=self.adapt_cutoff, minh=self.minh
+            linop=self.equation_l(t, y),
+            NLfunc=lambda y_: self.equation_nl(t, y_),
+            epsilon=self.rtol,
+            adapt_cutoff=self.adapt_cutoff,
+            minh=self.minh,
         )
         y_new, h, h_new_suggested = solver.step(y, self.dt_suggested)
 
@@ -621,7 +641,13 @@ class Solver:
         self.time_tracker.start_timer("total")
         N_points = next(iter(step_data["fields"].values())).shape[0] - (1 if k0 else 0)
         self.grid = Grid(
-            D=D, l_params=l_params, N_points=N_points, k_min=step_data["k_min"], fields_name=fields_name, n_threads=self.grid.maths.n_threads, k0=k0
+            D=D,
+            l_params=l_params,
+            N_points=N_points,
+            k_min=step_data["k_min"],
+            fields_name=fields_name,
+            n_threads=self.grid.maths.n_threads,
+            k0=k0,
         )
         self.grid.fields = step_data["fields"]
         self.grid.time_tracker = self.time_tracker
@@ -695,7 +721,11 @@ class Solver:
             fields = initial_conditions(self.grid.fields, self.grid, self.simu_params)
             self.grid = self.grid.to_new_size(fields)
         elif initial_conditions == "loadfromsave":
-            params = {"end_simulation": end_simulation, "solver_params": solver_params, "simu_params": self.simu_params}  # override previous parameters
+            params = {
+                "end_simulation": end_simulation,
+                "solver_params": solver_params,
+                "simu_params": self.simu_params,
+            }  # override previous parameters
             update_json_settings(save_path, params, update=True)
 
             init_t, dt = self._load_parameters(save_path)
@@ -745,7 +775,10 @@ class Solver:
             self.grid.fields = new_fields  # sets grid fields to current values
 
             # N-D -> 1D
-            return fields_to_1D(self.grid.maths.enforce_grid_symmetry_dict(self.equation_nl(t, self.grid, self.simu_params)), self.grid.fields_names)
+            return fields_to_1D(
+                self.grid.maths.enforce_grid_symmetry_dict(self.equation_nl(t, self.grid, self.simu_params)),
+                self.grid.fields_names,
+            )
 
         def save_step(t: float, dt: float, y: np.ndarray) -> bool:
             """Save the current step and check if the simulation should end
@@ -771,7 +804,12 @@ class Solver:
 
             # Check whether to stop the simulation
             stopsim = False
-            sst, sset, sss, ssos = self.end_simulation["t"], self.end_simulation["elapsed_time"], self.end_simulation["step"], self.end_simulation["ode_step"]
+            sst, sset, sss, ssos = (
+                self.end_simulation["t"],
+                self.end_simulation["elapsed_time"],
+                self.end_simulation["step"],
+                self.end_simulation["ode_step"],
+            )
             if sst is not None and t >= sst:
                 logger.info(f"Reached time: {sst}")
                 stopsim = True

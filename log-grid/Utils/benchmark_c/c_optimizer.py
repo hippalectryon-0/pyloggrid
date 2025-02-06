@@ -14,6 +14,7 @@ This will test for each compiler:
 
 Individual benchmark configurations are in ``run_benchmark.py``.
 """
+
 import re
 import shutil
 from subprocess import call

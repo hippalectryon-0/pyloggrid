@@ -15,14 +15,15 @@ log-grid/*
 !log-grid/install.ps1
 !log-grid/install.sh
 !log-grid/LICENSE
-!log-grid/poetry.lock
+!log-grid/uv.lock
+!log-grid/.python-version
 !log-grid/pyproject.toml
 !log-grid/README.md
 !log-grid/Utils/
 !log-grid/tests/
 !log-grid/Simulations/
 !log-grid/readme_pypi.md
-!log-grid/build.py
+!log-grid/hatch_build.py
 
 # Exclude top-level pre-commit
 .pre-commit-config.yaml

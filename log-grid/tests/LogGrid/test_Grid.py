@@ -1,4 +1,5 @@
 """utests for Grid.py"""
+
 import itertools
 import os
 import sys
@@ -82,7 +83,11 @@ def d_l_params(f):
 
     # noinspection PyMissingOrEmptyDocstring
     def g(*args, **kwargs):
-        for params in [{"a": None, "b": None, "plastic": False}, {"a": 1, "b": 2, "plastic": False}, {"a": None, "b": None, "plastic": True}]:
+        for params in [
+            {"a": None, "b": None, "plastic": False},
+            {"a": 1, "b": 2, "plastic": False},
+            {"a": None, "b": None, "plastic": True},
+        ]:
             f(l_params=params, *args, **kwargs)
 
     return g
@@ -105,7 +110,11 @@ d_D123_k0_l_params_N = composed_decs(d_D123, d_k0, d_l_params, d_N)
 
 args_k0 = [False, True]
 args_N = [3, 5, 7, 10]
-args_l_params = ({"a": None, "b": None, "plastic": False}, {"a": 1, "b": 2, "plastic": False}, {"a": None, "b": None, "plastic": True})
+args_l_params = (
+    {"a": None, "b": None, "plastic": False},
+    {"a": 1, "b": 2, "plastic": False},
+    {"a": None, "b": None, "plastic": True},
+)
 args_D = [1, 2, 3]
 args_k0_N = ("k0, N", list(itertools.product(args_k0, args_N)))
 args_D123_k0_N = ("D, k0, N", list(itertools.product(args_D, args_k0, args_N)))
@@ -162,7 +171,7 @@ class TestGrid:
         points = np.zeros((2 * N + n_k0,))
         for n in range(N):
             points[N + n + n_k0] = grid.l**n
-            points[N - 1 - n] = -grid.l**n
+            points[N - 1 - n] = -(grid.l**n)
         points = np.array(points) * k_min
 
         ks_space = [np.zeros((2 * N + n_k0,) * D)]
@@ -261,19 +270,19 @@ class TestMaths:
     @pytest.mark.parametrize(*args_D123_k0_N)
     def test_d2x(self, D, k0, N):
         grid, arr = get_grid_and_array(N, D, k0=k0)
-        assert np.isclose(grid.maths.d2x * arr, -grid.ks[0] ** 2 * arr).all()
+        assert np.isclose(grid.maths.d2x * arr, -(grid.ks[0] ** 2) * arr).all()
 
     @pytest.mark.parametrize(*args_D123_k0_N)
     def test_d2y(self, D, k0, N):
         if D > 1:
             grid, arr = get_grid_and_array(N, D, k0=k0)
-            assert np.isclose(grid.maths.d2y * arr, -grid.ks[1] ** 2 * arr).all()
+            assert np.isclose(grid.maths.d2y * arr, -(grid.ks[1] ** 2) * arr).all()
 
     @pytest.mark.parametrize(*args_k0_N)
     def test_d2z(self, k0, N):
         for D in [3]:
             grid, arr = get_grid_and_array(N, D, k0=k0)
-            assert np.isclose(grid.maths.d2z * arr, -grid.ks[2] ** 2 * arr).all()
+            assert np.isclose(grid.maths.d2z * arr, -(grid.ks[2] ** 2) * arr).all()
 
     @pytest.mark.parametrize(*args_k0_N)
     def test_rot2D_inv(self, k0, N):
@@ -450,7 +459,10 @@ class TestMaths:
 
             for N_batch in range(1, 10):
                 fgs = [
-                    (grid.maths.enforce_grid_symmetry_arr(randcomplex_like(arr1)), grid.maths.enforce_grid_symmetry_arr(randcomplex_like(arr1)))
+                    (
+                        grid.maths.enforce_grid_symmetry_arr(randcomplex_like(arr1)),
+                        grid.maths.enforce_grid_symmetry_arr(randcomplex_like(arr1)),
+                    )
                     for _ in range(N_batch)
                 ]
                 expected = np.array([grid.maths.convolve(f, g) for f, g in fgs])

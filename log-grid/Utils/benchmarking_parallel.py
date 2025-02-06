@@ -2,6 +2,7 @@
 Benchmark multithreading performance of (3)D simulation vs. number of CPUs
 Plot results, best time vs therotical ideal time (time on 1 CPU / # of CPUs)
 """
+
 import os
 import sys
 
@@ -30,7 +31,7 @@ l_params = {"plastic": False, "a": 1, "b": 2}
 n_threads_convolution = np.array([1, 2, 3, 4, 5, 8, 12, 16])
 n_parallel_convolution = np.array([1, 2, 3, 4, 5, 8, 12, 16])
 k0 = False
-number_cycles = 1000  # Average each point over this many convolutions
+number_cycles = 100  # Average each point over this many convolutions
 
 
 ## Do not edit below ##
@@ -41,13 +42,22 @@ def benchmark_function(grid: Grid, n_batch: int) -> float:
     """
 
     if n_batch > 1:
-        fgs = [(np.random.randn(*grid.ks_modulus.shape).astype("complex"), np.random.randn(*grid.ks_modulus.shape).astype("complex")) for _ in range(n_batch)]
+        fgs = [
+            (
+                np.random.randn(*grid.ks_modulus.shape).astype("complex"),
+                np.random.randn(*grid.ks_modulus.shape).astype("complex"),
+            )
+            for _ in range(n_batch)
+        ]
 
         t0 = time.perf_counter()
         grid.maths.convolve_batch(fgs)
 
     else:
-        f, g = np.random.randn(*grid.ks_modulus.shape).astype("complex"), np.random.randn(*grid.ks_modulus.shape).astype("complex")
+        f, g = (
+            np.random.randn(*grid.ks_modulus.shape).astype("complex"),
+            np.random.randn(*grid.ks_modulus.shape).astype("complex"),
+        )
         t0 = time.perf_counter()
         grid.maths.convolve(f, g)
 
@@ -75,7 +85,13 @@ for i, n_batch in np.ndenumerate(n_parallel_convolution):
     i = i[0]
     color = cmap(i / n_parallel_convolution.size) if n_parallel_convolution.size > 1 else "black"
     if i == 0:
-        plt.plot(n_threads_convolution, n_threads_convolution / np.min(n_threads_convolution), "-", label="ideal", color=color)
+        plt.plot(
+            n_threads_convolution,
+            n_threads_convolution / np.min(n_threads_convolution),
+            "-",
+            label="ideal",
+            color=color,
+        )
     plt.plot(n_threads_convolution, times[0, 0] / times[i], "o", color=color, label=f"n_batch={n_batch}")
 if len(n_parallel_convolution) == 1:
     plt.axvline(x=n_threads_convolution[np.argmin(times)], linestyle="--", color="red", label="best time")

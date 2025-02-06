@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-c -g -fpic -Wall -Wextra -O2 -march=native -ffast-math -funroll-loops -fno-stack-protector -Wl,-z,now
-LDFLAGS=-shared -Wl,-O1 -Wl,-Bsymbolic-functions -g -fwrapv -O2
+LDFLAGS=-shared -Wl,-O1 -Wl,-Bsymbolic-functions -g -fwrapv -O2 -latomic
 SOURCES=convolver_c.c
 OBJECTS=$(SOURCES:.c=.o)
 TARGET=convolver_c.dll

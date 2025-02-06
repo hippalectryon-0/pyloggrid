@@ -1,9 +1,8 @@
 """Cython settings for windows"""
-from distutils.core import setup
 
 import numpy
 from Cython.Build import cythonize
-from setuptools import Extension
+from setuptools import Extension, setup
 
 ext_modules = [
     Extension(

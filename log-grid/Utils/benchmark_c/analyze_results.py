@@ -1,4 +1,5 @@
 """analyze benchmarks"""
+
 import pathlib
 
 import matplotlib.pyplot as plt
@@ -39,7 +40,15 @@ def plot_results():
     for env_i, (env, res_env) in enumerate(results.items()):
         ax = axs[env_i]
         for i, (flags, data) in enumerate(res_env.items()):
-            ax.plot(np.ones_like(data) * i, data, alpha=0.005, linestyle="", marker="o", markeredgewidth=0, color=colors[env_i])
+            ax.plot(
+                np.ones_like(data) * i,
+                data,
+                alpha=0.005,
+                linestyle="",
+                marker="o",
+                markeredgewidth=0,
+                color=colors[env_i],
+            )
             ax.semilogy(i, np.mean(data), linestyle="", marker="o", color="black")
             ax.text(i - 0.3, np.mean(data), flags, rotation="vertical")
         ax.plot([], marker="o", color=colors[env_i], label=env or "default")
