@@ -8,6 +8,8 @@ from hatchling.builders.hooks.plugin.interface import BuildHookInterface
 
 class CustomBuildHook(BuildHookInterface):
     def initialize(self, _version, _build_data):
+        if "READTHEDOCS_VIRTUALENV_PATH" in os.environ:
+            return
         try:
             os.chdir(pathlib.Path("pyloggrid/LogGrid"))
             if sys.platform == "win32":
